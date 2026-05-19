@@ -826,10 +826,12 @@ function filterGedeeld(){
 
 function renderGedeeldRows(rows,listId){
   var list=document.getElementById(listId||'gedeeld-list');
-  var leeg=document.getElementById(listId?null:'gedeeld-leeg');
+  var leegId=listId?'pub-leeg':'gedeeld-leeg';
+  var leeg=document.getElementById(leegId);
+  if(!list)return;
   list.innerHTML='';
-  if(!rows.length){leeg.style.display='block';return;}
-  leeg.style.display='none';
+  if(!rows.length){if(leeg)leeg.style.display='block';return;}
+  if(leeg)leeg.style.display='none';
   rows.forEach(function(r,i){
       var d=document.createElement('div');
       d.className='result-card';
@@ -848,11 +850,7 @@ function renderGedeeldRows(rows,listId){
       var allVals=[vals[0],vals[1],vals[2]];
       if(r.url){allTabs.push('Bron bekijken');allVals.push(r.url);}
 
-      // Recalculate tabsHtml with correct count
-      tabsHtml=allTabs.map(function(t,ti){
-        return '<button class="res-tab'+(ti===0?' active':'')+'" onclick="swGedeeldTab(this,'+i+','+ti+')">'+t+'</button>';
-      }).join('');
-      tabsDivG.innerHTML=tabsHtml;
+      // tabsHtml will be set after tabsDivG is created below
 
       allVals.forEach(function(v,ti){
         var pane=document.createElement('div');
@@ -974,7 +972,10 @@ function renderGedeeldRows(rows,listId){
       var tabsDivG=document.createElement('div');
       tabsDivG.className='res-tabs';
       tabsDivG.style.background='var(--bg)';
-      tabsDivG.innerHTML=tabsHtml;
+      var finalTabsHtml=allTabs.map(function(t,ti){
+        return '<button class="res-tab'+(ti===0?' active':'')+'" onclick="swGedeeldTab(this,'+i+','+ti+')">'+t+'</button>';
+      }).join('');
+      tabsDivG.innerHTML=finalTabsHtml;
       d.appendChild(hdrG);d.appendChild(tabsDivG);d.appendChild(panesDiv);
       list.appendChild(d);
     });
