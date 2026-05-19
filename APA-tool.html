@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APA Bronvermelding</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f1f3d;--navy2:#1a3358;--bg:#f7f5f1;--surface:#ffffff;--border:#e2ddd6;--border2:#ccc8c0;--text:#1a1714;--text2:#5a5550;--text3:#9a9590;--r:12px;--rsm:7px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:2rem 1rem 4rem}
+.screen{width:100%;max-width:680px;display:none;animation:fadeUp .25s ease both}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.s1-head{text-align:center;padding:2.5rem 0 2rem}
+.s1-head h1{font-family:'Playfair Display',Georgia,serif;font-size:2rem;font-weight:500;color:var(--navy);letter-spacing:-.02em;margin-bottom:.4rem}
+.s1-head p{font-size:.82rem;color:var(--text3)}
+.src-group{margin-bottom:1.5rem}
+.src-group-label{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem;padding-left:.1rem}
+.src-grid{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:.45rem;padding-bottom:.35rem;scrollbar-width:none;-ms-overflow-style:none}.src-grid::-webkit-scrollbar{display:none}
+.src-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.8rem .7rem .7rem;cursor:pointer;text-align:center;transition:all .14s;user-select:none;flex:0 0 130px;min-width:130px}
+.src-card:hover{border-color:var(--navy);background:var(--navy);color:white}
+.src-card .si{font-size:1.5rem;display:block;margin-bottom:.3rem}
+.src-card .sl{font-size:.78rem;font-weight:500;line-height:1.3;display:block}
+.more-row{text-align:center;margin-top:.5rem}
+.more-btn{font-size:.78rem;color:var(--text3);background:none;border:none;cursor:pointer;padding:.3rem .5rem;border-bottom:1px dashed var(--border2);transition:color .12s}
+.more-btn:hover{color:var(--navy)}
+.s2-top{display:flex;align-items:center;gap:.75rem;margin-bottom:1.75rem;padding-top:2rem}
+.back-btn{width:36px;height:36px;border:1px solid var(--border);background:var(--surface);border-radius:50%;cursor:pointer;font-size:1rem;color:var(--text2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s}
+.back-btn:hover{border-color:var(--navy);color:var(--navy)}
+.s2-title{font-family:'Playfair Display',Georgia,serif;font-size:1.5rem;font-weight:500;color:var(--navy)}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;margin-bottom:.75rem}
+.fsec{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1.1rem}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+.ff{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:.28rem}
+.field label{font-size:.76rem;font-weight:500;color:var(--text2)}
+.field .hint{font-size:.69rem;color:var(--text3);margin-top:-.15rem;line-height:1.4}
+.field input,.field select,.field textarea{padding:.52rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.86rem;color:var(--text);background:var(--surface);width:100%;transition:border-color .14s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,31,61,.07)}
+.arows{display:flex;flex-direction:column;gap:.4rem;margin:.25rem 0 .35rem}
+.arow{display:grid;grid-template-columns:1fr .85fr .65fr 28px;gap:.4rem;align-items:center}
+.arow input{padding:.44rem .55rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--text);background:var(--surface);width:100%}
+.arow input:focus{outline:none;border-color:var(--navy)}
+.rm-btn{width:28px;height:28px;border:1px solid var(--border);background:var(--surface);border-radius:var(--rsm);cursor:pointer;font-size:.95rem;color:var(--text3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s}
+.rm-btn:hover{border-color:#e53e3e;color:#e53e3e}
+.add-aut{font-size:.76rem;color:var(--text2);background:none;border:1px dashed var(--border2);border-radius:var(--rsm);cursor:pointer;padding:.35rem .75rem;width:100%;text-align:center;transition:all .12s;margin-top:.1rem}
+.add-aut:hover{border-color:var(--navy);color:var(--navy)}
+.tag-opt{display:inline-block;font-size:.62rem;padding:1px 5px;border-radius:99px;background:var(--bg);color:var(--text3);border:1px solid var(--border);margin-left:4px;font-weight:400;vertical-align:middle}
+.online-toggle{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;border:1px solid var(--border);border-radius:var(--rsm);cursor:pointer;user-select:none;transition:all .14s;margin-top:.1rem}
+.online-toggle:hover{border-color:var(--navy2)}
+.online-toggle input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--navy)}
+.online-toggle span{font-size:.83rem;color:var(--text2);font-weight:500}
+.online-fields{margin-top:.85rem;display:none;flex-direction:column;gap:.8rem}
+.online-fields.open{display:flex}
+.doi-info{background:#eef4ff;border:1px solid #c3d9ff;border-radius:var(--rsm);padding:.6rem .85rem;font-size:.76rem;color:#1e3a8a;line-height:1.55}
+.doi-info code{background:rgba(30,58,138,.08);padding:1px 4px;border-radius:3px;font-size:.73rem}
+.info-note{background:#fffbeb;border:1px solid #fde68a;border-radius:var(--rsm);padding:.65rem .9rem;font-size:.78rem;color:#78350f;line-height:1.55}
+.gen-btn{width:100%;padding:.9rem;background:var(--navy);color:white;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:background .14s;letter-spacing:.01em;margin-top:.25rem}
+.gen-btn:hover{background:var(--navy2)}
+.form-err{display:none;padding:.6rem .9rem;background:#fff1f1;border:1px solid #fecaca;border-radius:var(--rsm);font-size:.78rem;color:#991b1b;margin-top:.75rem}
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:1rem}
+.res-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg)}
+.res-tab{flex:1;padding:.7rem;text-align:center;font-size:.78rem;font-weight:500;cursor:pointer;color:var(--text3);background:none;border:none;border-bottom:2px solid transparent;transition:all .12s}
+.res-tab.active{color:var(--navy);border-bottom-color:var(--navy);background:var(--surface)}
+.res-pane{display:none;padding:1.5rem}
+.res-pane.active{display:block}
+.cite-text{font-family:'Playfair Display',Georgia,serif;font-size:.97rem;line-height:1.9;color:var(--text);word-break:break-word}
+.cite-text.bl{text-indent:-1.5rem;padding-left:1.5rem}
+.cite-note{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.74rem;color:var(--text3);line-height:1.55}
+.cite-note em{font-style:italic;color:var(--text2)}
+.copy-btn{margin-top:.85rem;width:100%;padding:.55rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;color:var(--text2);transition:all .12s}
+.copy-btn:hover{background:var(--navy);color:white;border-color:var(--navy)}
+.copy-btn.done{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.act-btn{padding:.7rem;border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;cursor:pointer;text-align:center;transition:all .12s;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+.act-btn:hover{border-color:var(--navy);color:var(--navy)}
+.act-btn.primary{background:var(--navy);color:white;border-color:var(--navy)}
+.act-btn.primary:hover{background:var(--navy2)}
+.saved-section{margin-top:.5rem}
+.saved-section h3{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:500;color:var(--navy);margin-bottom:.75rem}
+.saved-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:.7rem 2.2rem .7rem 2rem;font-family:'Playfair Display',Georgia,serif;font-size:.87rem;line-height:1.8;position:relative;word-break:break-word;margin-bottom:.4rem;text-indent:-1.2rem}
+.rm-saved{position:absolute;top:.55rem;right:.55rem;font-size:.8rem;cursor:pointer;color:var(--text3);background:none;border:none;transition:color .12s}
+.rm-saved:hover{color:#e53e3e}
+.copy-all-btn{width:100%;padding:.65rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;color:var(--text2);margin-top:.5rem;transition:all .12s}
+.copy-all-btn:hover{background:var(--navy);color:white;border-color:var(--navy)}
+@media(max-width:500px){.fg{grid-template-columns:1fr}.arow{grid-template-columns:1fr 1fr 28px}.arow .tc{display:none}.action-row{grid-template-columns:1fr}}
+.copyright{text-align:center;font-size:.68rem;color:var(--text3);padding:2rem 0 .5rem;letter-spacing:.03em}
+</style>
+</head>
+<body>
+
+<div class="screen active" id="s1">
+  <div class="copyright">&copy; Patrick Bres</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1rem">
+    <button onclick="naarScherm(5)" style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.3rem .75rem;cursor:pointer;transition:all .14s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">Gedeelde bronnen</button>
+    <button id="saved-shortcut" onclick="naarScherm(4)" style="display:none;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.3rem .75rem;cursor:pointer;transition:all .14s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">Opgeslagen (<span id="s1-saved-cnt">0</span>)</button>
+  </div>
+  <div class="s1-head">
+    <h1>APA Bronvermelding</h1>
+    <p>Kies het brontype om te beginnen</p>
+  </div>
+  <div class="src-group">
+    <div class="src-group-label">Boeken &amp; artikelen</div>
+    <div class="src-grid">
+      <div class="src-card" onclick="kies('boek')"><span class="si">📚</span><span class="sl">Boek</span></div>
+      <div class="src-card" onclick="kies('hoofdstuk')"><span class="si">📖</span><span class="sl">Hoofdstuk uit boek</span></div>
+      <div class="src-card" onclick="kies('tijdschrift')"><span class="si">📰</span><span class="sl">Tijdschrift&shy;artikel</span></div>
+      <div class="src-card" onclick="kies('krant')"><span class="si">🗞️</span><span class="sl">Krantenartikel</span></div>
+    </div>
+  </div>
+  <div class="src-group">
+    <div class="src-group-label">Online &amp; media</div>
+    <div class="src-grid">
+      <div class="src-card" onclick="kies('website')"><span class="si">🌐</span><span class="sl">Webpagina</span></div>
+      <div class="src-card" onclick="kies('youtube')"><span class="si">▶️</span><span class="sl">YouTube / video</span></div>
+      <div class="src-card" onclick="kies('social')"><span class="si">📱</span><span class="sl">Social media</span></div>
+      <div class="src-card" onclick="kies('podcast')"><span class="si">🎙️</span><span class="sl">Podcast</span></div>
+    </div>
+  </div>
+  <div class="src-group">
+    <div class="src-group-label">AI-tools</div>
+    <div class="src-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+      <div class="src-card" onclick="kies('aitool')" style="border-color:#c7d7f5;background:#f0f4ff">
+        <span class="si">🤖</span>
+        <span class="sl" style="color:#1a3358">AI-tool (ChatGPT, Claude, e.a.)</span>
+        <span style="display:block;font-size:.65rem;margin-top:.3rem;color:#4a6090">Conform HAN APA-richtlijn</span>
+      </div>
+    </div>
+  </div>
+  <div class="src-group">
+    <div class="src-group-label">Rapporten &amp; onderzoek</div>
+    <div class="src-grid">
+      <div class="src-card" onclick="kies('rapport')"><span class="si">📋</span><span class="sl">Rapport / jaarverslag</span></div>
+      <div class="src-card" onclick="kies('proefschrift')"><span class="si">🎓</span><span class="sl">Proefschrift / scriptie</span></div>
+      <div class="src-card" onclick="kies('congres')"><span class="si">🎤</span><span class="sl">Congres</span></div>
+      <div class="src-card" onclick="kies('dataset')"><span class="si">📊</span><span class="sl">Dataset</span></div>
+    </div>
+  </div>
+  <div class="more-row">
+    <button class="more-btn" id="more-btn" onclick="toggleMore()">meer brontypen ▾</button>
+  </div>
+
+  <div id="more-extra" style="display:none">
+    <div class="src-group" style="margin-top:1.25rem">
+      <div class="src-group-label">Overig</div>
+      <div class="src-grid">
+        <div class="src-card" onclick="kies('naslagwerk')"><span class="si">📒</span><span class="sl">Naslagwerk</span></div>
+        <div class="src-card" onclick="kies('film')"><span class="si">🎬</span><span class="sl">Film / tv-serie</span></div>
+        <div class="src-card" onclick="kies('muziek')"><span class="si">🎵</span><span class="sl">Muziek / album</span></div>
+        <div class="src-card" onclick="kies('wetgeving')"><span class="si">⚖️</span><span class="sl">Wet / jurisprudentie</span></div>
+        <div class="src-card" onclick="kies('software')"><span class="si">💻</span><span class="sl">Software / app</span></div>
+        <div class="src-card" onclick="kies('afbeelding')"><span class="si">🖼️</span><span class="sl">Afbeelding / figuur</span></div>
+        <div class="src-card" onclick="kies('leeromgeving')"><span class="si">🏫</span><span class="sl">Digitale leer&shy;omgeving</span></div>
+        <div class="src-card" onclick="kies('perscomm')"><span class="si">💬</span><span class="sl">Persoonlijke communicatie</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">&copy; Patrick Bres</div>
+</div>
+
+<div class="screen" id="s2">
+  <div class="copyright" style="padding:1rem 0 0">&copy; Patrick Bres</div>
+  <div class="s2-top">
+    <button class="back-btn" onclick="naarScherm(1)">&#8592;</button>
+    <h2 class="s2-title" id="s2-title">Boek</h2>
+  </div>
+  <div id="form-content"></div>
+  <button class="gen-btn" onclick="genereer()">Maak APA-vermelding</button>
+  <div class="form-err" id="form-err"></div>
+  <div class="copyright">&copy; Patrick Bres</div>
+</div>
+
+<div class="screen" id="s3">
+  <div class="copyright" style="padding:1rem 0 0">&copy; Patrick Bres</div>
+  <div class="s2-top">
+    <button class="back-btn" onclick="naarScherm(2)">&#8592;</button>
+    <h2 class="s2-title">Resultaat</h2>
+  </div>
+
+  <div class="result-card">
+    <div class="res-tabs">
+      <button class="res-tab active" onclick="swTab(0)">Bronnenlijst</button>
+      <button class="res-tab" onclick="swTab(1)">Lopende tekst</button>
+      <button class="res-tab" onclick="swTab(2)">Tussen haakjes</button>
+    </div>
+    <div id="rp0" style="padding:1rem 1.25rem">
+      <div class="cite-text bl" id="c-bl"></div>
+      <div class="cite-note" id="c-bl-note" style="display:none"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem">
+        <button class="copy-btn" onclick="kopieer('c-bl',this)" style="position:static;margin:0">Kopieer</button>
+        <button class="copy-btn" onclick="kopieerWord('c-bl',this)" style="position:static;margin:0">Kopieer voor Word</button>
+      </div>
+    </div>
+    <div id="rp1" style="display:none;padding:1rem 1.25rem">
+      <div class="cite-text" id="c-lp"></div>
+      <div class="cite-note">Gebruik wanneer je de auteur noemt in je zin, bijv.: <em>Jansen (2021) stelt dat&hellip;</em></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem">
+        <button class="copy-btn" onclick="kopieer('c-lp',this)" style="position:static;margin:0">Kopieer</button>
+        <button class="copy-btn" onclick="kopieerWord('c-lp',this)" style="position:static;margin:0">Kopieer voor Word</button>
+      </div>
+    </div>
+    <div id="rp2" style="display:none;padding:1rem 1.25rem">
+      <div class="cite-text" id="c-hk"></div>
+      <div class="cite-note">Gebruik aan het einde van een zin, bijv.: <em>&hellip;is aangetoond (Jansen, 2021, p. 45).</em></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem">
+        <button class="copy-btn" onclick="kopieer('c-hk',this)" style="position:static;margin:0">Kopieer</button>
+        <button class="copy-btn" onclick="kopieerWord('c-hk',this)" style="position:static;margin:0">Kopieer voor Word</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-row" style="margin-top:.75rem">
+    <button class="act-btn primary" onclick="slaOp();naarScherm(4)">Opslaan in lijst</button>
+    <button class="act-btn" onclick="naarScherm(1)">Nieuwe bron</button>
+  </div>
+
+  <div class="result-card" style="margin-top:.75rem">
+    <div style="padding:1.1rem 1.5rem .85rem;border-bottom:1px solid var(--border)">
+      <span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:500;color:var(--navy)">Delen met de klas</span>
+    </div>
+    <div style="padding:1rem 1.5rem">
+      <div style="font-size:.78rem;color:var(--text2);margin-bottom:.75rem;line-height:1.55">Deel deze vermelding direct met je klas. Iedereen met de klascode kan hem terugvinden.</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        <input type="text" id="direct-naam" placeholder="Jouw naam (optioneel)" style="padding:.5rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--text);width:100%">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:.5rem">
+          <input type="text" id="direct-code" placeholder="Klascode" style="padding:.5rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--text);width:100%">
+          <button onclick="directDelen()" style="padding:.5rem 1.1rem;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;white-space:nowrap">Deel</button>
+        </div>
+      </div>
+      <div id="direct-melding" style="display:none;margin-top:.5rem;font-size:.75rem;padding:.4rem .6rem;border-radius:var(--rsm)"></div>
+    </div>
+  </div>
+
+  <div class="copyright">&copy; Patrick Bres</div>
+</div>
+
+<div class="screen" id="s4">
+  <div class="s2-top">
+    <button class="back-btn" onclick="naarScherm(1)">&#8592;</button>
+    <h2 class="s2-title">Mijn bronnen</h2>
+  </div>
+
+  <div id="saved-leeg" style="font-size:.85rem;color:var(--text3);padding:.5rem 0;display:none">Nog geen bronnen opgeslagen. Maak eerst een APA-vermelding aan.</div>
+  <div id="saved-cards"></div>
+
+  <div id="saved-actions" style="display:none;margin-top:.25rem">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+      <button class="copy-all-btn" style="margin:0" onclick="kopieerAlles()">Kopieer bronnenlijst</button>
+      <button class="copy-all-btn" style="margin:0" onclick="exportTxt()">Download .txt</button>
+    </div>
+    <div style="margin-top:.75rem;padding:.6rem .8rem;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--rsm);font-size:.71rem;color:#78350f;line-height:1.5">
+      <strong>Lokale opslag:</strong> bronnen blijven bewaard in deze browser op dit apparaat. In een andere browser of na het wissen van de cache zijn ze niet beschikbaar.
+    </div>
+  </div>
+
+  <div class="copyright" style="padding:1rem 0 0">&copy; Patrick Bres</div>
+</div>
+
+<div class="screen" id="s5">
+  <div class="s2-top">
+    <button class="back-btn" onclick="naarScherm(1)">&#8592;</button>
+    <h2 class="s2-title">Gedeelde bronnen</h2>
+  </div>
+
+  <div class="result-card" style="margin-bottom:.75rem">
+    <div style="padding:1.25rem 1.5rem .85rem;border-bottom:1px solid var(--border)">
+      <span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:500;color:var(--navy)">Klascode</span>
+    </div>
+    <div style="padding:1rem 1.5rem">
+      <div style="font-size:.78rem;color:var(--text2);margin-bottom:.75rem;line-height:1.55">Vul de klascode in om alle gedeelde bronnen van jouw klas te zien.</div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:.5rem">
+        <input type="text" id="klascode-input" placeholder="Klascode (bijv. MMLW2025)" style="padding:.52rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.86rem;color:var(--text);width:100%">
+        <button onclick="laadGedeeld()" style="padding:.52rem .9rem;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;white-space:nowrap">Bekijk</button>
+      </div>
+      <div id="s5-melding" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="result-card" id="gedeeld-section" style="display:none;margin-bottom:.75rem">
+    <div style="padding:1.25rem 1.5rem .85rem;border-bottom:1px solid var(--border)">
+      <span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:500;color:var(--navy)">Bronnen van de klas</span>
+    </div>
+    <div style="padding:1rem 1.5rem">
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.85rem">
+        <input type="text" id="filter-naam" placeholder="Zoek op naam of trefwoord..." oninput="filterGedeeld()" style="padding:.45rem .65rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--text);width:100%">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+          <select id="filter-brontype" onchange="filterGedeeld()" style="padding:.45rem .6rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--text);background:var(--surface)">
+            <option value="">Alle brontypen</option>
+            <option value="boek">Boek</option>
+            <option value="hoofdstuk">Hoofdstuk uit boek</option>
+            <option value="tijdschrift">Tijdschriftartikel</option>
+            <option value="krant">Krantenartikel</option>
+            <option value="website">Webpagina</option>
+            <option value="rapport">Rapport / jaarverslag</option>
+            <option value="proefschrift">Proefschrift / scriptie</option>
+            <option value="youtube">YouTube / video</option>
+            <option value="naslagwerk">Naslagwerk</option>
+            <option value="social">Social media</option>
+            <option value="podcast">Podcast</option>
+            <option value="film">Film / tv-serie</option>
+            <option value="muziek">Muziek / album</option>
+            <option value="congres">Congres</option>
+            <option value="wetgeving">Wet / jurisprudentie</option>
+            <option value="dataset">Dataset</option>
+            <option value="software">Software / app</option>
+            <option value="afbeelding">Afbeelding / figuur</option>
+            <option value="leeromgeving">Digitale leeromgeving</option>
+            <option value="aitool">AI-tool</option>
+            <option value="perscomm">Persoonlijke communicatie</option>
+          </select>
+          <select id="filter-sortering" onchange="filterGedeeld()" style="padding:.45rem .6rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--text);background:var(--surface)">
+            <option value="datum">Nieuwste eerst</option>
+            <option value="oud">Oudste eerst</option>
+            <option value="alfabet">Alfabetisch</option>
+          </select>
+        </div>
+      </div>
+      <div id="gedeeld-list" style="margin-bottom:.75rem"></div>
+      <div id="gedeeld-leeg" style="font-size:.8rem;color:var(--text3);padding:.4rem 0;display:none">Geen bronnen gevonden met deze filters.</div>
+      <button class="copy-all-btn" onclick="kopieerGedeeld()">Kopieer gedeelde bronnenlijst</button>
+    </div>
+  </div>
+
+  <div id="beheer-panel" style="display:none;margin-bottom:.75rem">
+    <div class="result-card">
+      <div style="padding:1.1rem 1.5rem .85rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:500;color:var(--navy)">Beheer</span>
+        <button onclick="sluitBeheer()" style="font-size:.75rem;color:var(--text3);background:none;border:none;cursor:pointer;padding:.2rem .4rem">Sluiten</button>
+      </div>
+      <div style="padding:1rem 1.5rem">
+        <div style="font-size:.78rem;color:var(--text2);margin-bottom:1rem;line-height:1.55">Verwijderknoppen zijn zichtbaar naast elke bron. Hieronder een overzicht van alle klascodes.</div>
+
+        <div style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem">Alle klascodes</div>
+        <div id="klascodes-lijst" style="margin-bottom:.75rem">
+          <div style="font-size:.8rem;color:var(--text3)">Laden…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="beheer-login" style="display:none;margin-top:.5rem">
+    <div class="result-card">
+      <div style="padding:1rem 1.5rem">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:.5rem">
+          <input type="password" id="beheer-code" placeholder="Beheerderscode" style="padding:.5rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--text);width:100%">
+          <button onclick="checkBeheer()" style="padding:.5rem .9rem;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer">OK</button>
+        </div>
+        <div id="beheer-err" style="display:none;margin-top:.4rem;font-size:.73rem;color:#991b1b">Onjuiste beheerderscode.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:1rem;text-align:center">
+    <button id="beheer-toggle" onclick="toggleBeheer()" style="font-size:.7rem;color:var(--text3);background:none;border:none;cursor:pointer;padding:.25rem .5rem;border-bottom:1px dashed var(--border2)">&#9881; Beheer</button>
+  </div>
+
+  <div class="copyright" style="padding:1rem 0 0">&copy; Patrick Bres</div>
+</div>
+
+<script>
+var ht='',opg=[],lastR=null;
+var BEHEER_CODE='patrick-apa';
+var beheerActief=false;
+
+function toggleBeheer(){
+  var login=document.getElementById('beheer-login');
+  var tog=document.getElementById('beheer-toggle');
+  if(beheerActief){sluitBeheer();return;}
+  var open=login.style.display==='none';
+  login.style.display=open?'block':'none';
+  if(!open){document.getElementById('beheer-code').value='';document.getElementById('beheer-err').style.display='none';}
+}
+
+function checkBeheer(){
+  var code=document.getElementById('beheer-code').value.trim().toLowerCase();
+  if(code===BEHEER_CODE){
+    beheerActief=true;
+    document.getElementById('beheer-login').style.display='none';
+    document.getElementById('beheer-panel').style.display='block';
+    document.getElementById('beheer-toggle').style.display='none';
+    renderBeheerKnoppen(true);
+    laadKlascodes();
+  }else{
+    document.getElementById('beheer-err').style.display='block';
+  }
+}
+
+function sluitBeheer(){
+  beheerActief=false;
+  document.getElementById('beheer-panel').style.display='none';
+  document.getElementById('beheer-login').style.display='none';
+  document.getElementById('beheer-toggle').style.display='inline';
+  renderBeheerKnoppen(false);
+}
+
+function renderBeheerKnoppen(toon){
+  document.querySelectorAll('.verwijder-gedeeld').forEach(function(btn){
+    btn.style.display=toon?'block':'none';
+  });
+}
+
+async function laadKlascodes(){
+  var lijst=document.getElementById('klascodes-lijst');
+  if(!lijst)return;
+  try{
+    var rows=await sbFetch('rpc/get_klascodes','POST',{});
+    if(!rows.length){
+      lijst.innerHTML='<div style="font-size:.8rem;color:var(--text3)">Geen klascodes gevonden.</div>';
+      return;
+    }
+    lijst.innerHTML='';
+    rows.forEach(function(r){
+      var row=document.createElement('div');
+      row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:.55rem .75rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);margin-bottom:.4rem';
+      var info=document.createElement('div');
+      info.innerHTML='<span style="font-size:.85rem;font-weight:500;color:var(--text)">'+r.klascode+'</span>'
+        +'<span style="font-size:.72rem;color:var(--text3);margin-left:.5rem">'+r.aantal+' bron'+(r.aantal===1?'':'nen')+'</span>';
+      var delbtn=document.createElement('button');
+      delbtn.textContent='Verwijder alles';
+      delbtn.style.cssText='font-size:.72rem;color:#991b1b;background:none;border:1px solid #fecaca;border-radius:4px;cursor:pointer;padding:.25rem .5rem;white-space:nowrap';
+      delbtn.onmouseover=function(){this.style.background='#fff1f1'};
+      delbtn.onmouseout=function(){this.style.background='none'};
+      (function(kc,btn){
+        btn.onclick=function(){verwijderKlascode(kc,btn,row);};
+      })(r.klascode,delbtn);
+      row.appendChild(info);row.appendChild(delbtn);
+      lijst.appendChild(row);
+    });
+  }catch(e){
+    lijst.innerHTML='<div style="font-size:.8rem;color:#991b1b">Kon klascodes niet laden.</div>';
+  }
+}
+
+async function verwijderKlascode(kode,btn,row){
+  if(!beheerActief)return;
+  if(!confirm('Weet je zeker dat je ALLE bronnen onder klascode "'+kode+'" wilt verwijderen? Dit kan niet ongedaan worden gemaakt.'))return;
+  try{
+    await sbFetch('gedeelde_bronnen?klascode=eq.'+encodeURIComponent(kode),'DELETE');
+    row.remove();
+    // If currently viewing this klascode, refresh
+    var huidig=document.getElementById('klascode-input').value.trim();
+    if(huidig.toLowerCase()===kode.toLowerCase()){
+      document.getElementById('gedeeld-list').innerHTML='';
+      document.getElementById('gedeeld-leeg').style.display='block';
+      gedeeldRows=[];
+    }
+  }catch(e){
+    alert('Verwijderen mislukt: '+e.message);
+  }
+}
+
+async function verwijderGedeeld(id,btn){
+  if(!beheerActief)return;
+  try{
+    await sbFetch('gedeelde_bronnen?id=eq.'+id,'DELETE');
+    var card=btn.closest('.result-card');
+    if(card)card.remove();
+  }catch(e){
+    alert('Verwijderen mislukt: '+e.message);
+  }
+}
+var SB_URL='https://zplepwcniqzioyiuxscm.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwbGVwd2NuaXF6aW95aXV4c2NtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxODgxMjQsImV4cCI6MjA5NDc2NDEyNH0.ESi4zt9s8ZkIsrkvnXAWZXxXF5wRib_F_c96IcKz5g8';
+
+async function sbFetch(path, method, body){
+  var opts={method:method||'GET',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation','Accept':'application/json'}};
+  if(body)opts.body=JSON.stringify(body);
+  var r=await fetch(SB_URL+'/rest/v1/'+path,opts);
+  if(!r.ok){var err=await r.text();throw new Error(err);}
+  if(method==='DELETE')return true;
+  var txt=await r.text();
+  return txt?JSON.parse(txt):[];
+}
+
+var gedeeldRows=[];
+
+async function laadGedeeld(){
+  var code=document.getElementById('klascode-input').value.trim();
+  if(!code){toonMelding('Vul een klascode in.','warn');return;}
+  try{
+    var rows=await sbFetch('gedeelde_bronnen?klascode=eq.'+encodeURIComponent(code)+'&order=aangemaakt_op.desc','GET');
+    gedeeldRows=rows;
+    document.getElementById('gedeeld-section').style.display='block';
+    filterGedeeld();
+  }catch(e){toonMelding('Kon gedeelde bronnen niet laden. Controleer de klascode.','err');}
+}
+
+function filterGedeeld(){
+  var type=(document.getElementById('filter-brontype')||{}).value||'';
+  var sort=(document.getElementById('filter-sortering')||{}).value||'datum';
+  var zoek=((document.getElementById('filter-naam')||{}).value||'').toLowerCase().trim();
+  var filtered=gedeeldRows.filter(function(r){
+    var typeOk=!type||r.brontype===type;
+    var naamOk=!zoek||(r.naam||'').toLowerCase().includes(zoek)||(r.bronnenlijst||'').toLowerCase().includes(zoek);
+    return typeOk&&naamOk;
+  });
+  if(sort==='alfabet'){
+    filtered.sort(function(a,b){return (a.bronnenlijst||'').localeCompare(b.bronnenlijst||'','nl');});
+  }else if(sort==='oud'){
+    filtered.sort(function(a,b){return new Date(a.aangemaakt_op)-new Date(b.aangemaakt_op);});
+  }else{
+    filtered.sort(function(a,b){return new Date(b.aangemaakt_op)-new Date(a.aangemaakt_op);});
+  }
+  var leeg=document.getElementById('gedeeld-leeg');
+  var list=document.getElementById('gedeeld-list');
+  list.innerHTML='';
+  if(!filtered.length){leeg.style.display='block';return;}
+  leeg.style.display='none';
+  renderGedeeldRows(filtered);
+}
+
+
+function renderGedeeldRows(rows){
+  var list=document.getElementById('gedeeld-list');
+  var leeg=document.getElementById('gedeeld-leeg');
+  list.innerHTML='';
+  if(!rows.length){leeg.style.display='block';return;}
+  leeg.style.display='none';
+  rows.forEach(function(r,i){
+      var d=document.createElement('div');
+      d.className='result-card';
+      d.style.marginBottom='.75rem';
+      var datum=new Date(r.aangemaakt_op).toLocaleDateString('nl-NL');
+      var naam=r.naam||'Anoniem';
+      var vals=[r.bronnenlijst_html||r.bronnenlijst||'',r.lopend_html||r.lopend||'',r.haakjes_html||r.haakjes||''];
+      var tlabels=['Bronnenlijst','Lopende tekst','Tussen haakjes'];
+      var tabsHtml=tlabels.map(function(t,ti){
+        return '<button class="res-tab'+(ti===0?' active':'')+'" onclick="swGedeeldTab(this,'+i+','+ti+')">'+t+'</button>';
+      }).join('');
+      var panesDiv=document.createElement('div');
+      panesDiv.style.cssText='padding:1rem 1.25rem';
+      vals.forEach(function(v,ti){
+        var pane=document.createElement('div');
+        pane.className='gpane';
+        pane.dataset.gr=i;
+        pane.dataset.tab=ti;
+        if(ti!==0)pane.style.display='none';
+        var txt=document.createElement('div');
+        txt.className='cite-text'+(ti===0?' bl':'');
+        txt.style.cssText='font-family:Playfair Display,Georgia,serif;font-size:.95rem;line-height:1.9;word-break:break-word;'+(ti===0?'text-indent:-1.5rem;padding-left:1.5rem':'');
+        txt.id='gr-'+i+'-'+ti;
+        txt.innerHTML=v;
+        var btnRow=document.createElement('div');
+        btnRow.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.75rem';
+        var cbtn=document.createElement('button');
+        cbtn.className='copy-btn';
+        cbtn.style.cssText='position:static;margin:0';
+        cbtn.textContent='Kopieer';
+        (function(id){cbtn.onclick=function(){kopieerSaved(id,this);}})('gr-'+i+'-'+ti);
+        var cbtnW=document.createElement('button');
+        cbtnW.className='copy-btn';
+        cbtnW.style.cssText='position:static;margin:0';
+        cbtnW.textContent='Kopieer voor Word';
+        (function(id){cbtnW.onclick=function(){kopieerWord(id,this);}})('gr-'+i+'-'+ti);
+        btnRow.appendChild(cbtn);btnRow.appendChild(cbtnW);
+        pane.appendChild(txt);pane.appendChild(btnRow);
+        panesDiv.appendChild(pane);
+      });
+      var hdrG=document.createElement('div');
+      hdrG.style.cssText='padding:.75rem 1rem .6rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center';
+      var lblG=document.createElement('span');
+      lblG.style.cssText='font-size:.75rem;font-weight:500;color:var(--text3)';
+      lblG.textContent=naam+' · '+datum;
+      var delG=document.createElement('button');
+      delG.className='verwijder-gedeeld';
+      delG.textContent='Verwijder';
+      delG.style.cssText='display:none;font-size:.73rem;color:#991b1b;background:none;border:1px solid #fecaca;border-radius:4px;cursor:pointer;padding:.2rem .5rem';
+      (function(rid){delG.onclick=function(){verwijderGedeeld(rid,this);};})(r.id);
+      hdrG.appendChild(lblG);hdrG.appendChild(delG);
+      var tabsDivG=document.createElement('div');
+      tabsDivG.className='res-tabs';
+      tabsDivG.style.background='var(--bg)';
+      tabsDivG.innerHTML=tabsHtml;
+      d.appendChild(hdrG);d.appendChild(tabsDivG);d.appendChild(panesDiv);
+      list.appendChild(d);
+    });
+}
+
+
+
+
+
+
+async function directDelen(){
+  var code=document.getElementById('direct-code').value.trim();
+  var naam=document.getElementById('direct-naam').value.trim();
+  var mel=document.getElementById('direct-melding');
+  if(!code){
+    mel.style.cssText='background:#fffbeb;color:#78350f;border:1px solid #fde68a;display:block';
+    mel.textContent='Vul een klascode in.';return;
+  }
+  if(!lastR||!lastR.bl){
+    mel.style.cssText='background:#fff1f1;color:#991b1b;border:1px solid #fecaca;display:block';
+    mel.textContent='Geen vermelding beschikbaar. Genereer eerst een APA-vermelding.';return;
+  }
+  var t=document.createElement('div');
+  t.innerHTML=lastR.bl||'';
+  var bl=(t.innerText||t.textContent||'').trim();
+  if(!bl){
+    mel.style.cssText='background:#fff1f1;color:#991b1b;border:1px solid #fecaca;display:block';
+    mel.textContent='Kon geen tekst ophalen uit de vermelding.';return;
+  }
+  try{
+    var lp=(lastR.lp||'').replace(/<[^>]+>/g,'');
+    var hk=(lastR.hk||'').replace(/<[^>]+>/g,'');
+    await sbFetch('gedeelde_bronnen','POST',{
+      naam:naam||null,
+      bronnenlijst:bl,
+      bronnenlijst_html:lastR.bl||'',
+      lopend:lp,
+      lopend_html:lastR.lp||'',
+      haakjes:hk,
+      haakjes_html:lastR.hk||'',
+      brontype:ht||'',
+      klascode:code
+    });
+    mel.style.cssText='background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;display:block';
+    mel.textContent='Gedeeld met de klas!';
+    setTimeout(function(){mel.style.display='none'},3000);
+  }catch(e){
+    mel.style.cssText='background:#fff1f1;color:#991b1b;border:1px solid #fecaca;display:block';
+    mel.textContent='Fout bij delen: '+e.message;
+  }
+}
+function toonMelding(tekst,type){
+  var styles={ok:'background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;border-radius:5px;padding:.4rem .6rem;font-size:.75rem;margin-top:.5rem',warn:'background:#fffbeb;color:#78350f;border:1px solid #fde68a;border-radius:5px;padding:.4rem .6rem;font-size:.75rem;margin-top:.5rem',err:'background:#fff1f1;color:#991b1b;border:1px solid #fecaca;border-radius:5px;padding:.4rem .6rem;font-size:.75rem;margin-top:.5rem'};
+  var css=styles[type]||styles.warn;
+  ['deel-melding','s5-melding'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.style.cssText=css;el.textContent=tekst;el.style.display='block';
+    setTimeout(function(){el.style.display='none'},4000);}
+  });
+}
+
+function kopieerGedeeld(){
+  var items=document.querySelectorAll('#gedeeld-list > div');
+  var lines=[];
+  items.forEach(function(d){
+    var clone=d.cloneNode(true);
+    var meta=clone.querySelector('span');if(meta)meta.remove();
+    lines.push((clone.innerText||clone.textContent).trim());
+  });
+  navigator.clipboard.writeText(lines.sort().join('\n\n'));
+  var btn=event.target;btn.textContent='Gekopieerd ✓';
+  setTimeout(function(){btn.textContent='Kopieer gedeelde bronnenlijst'},2000);
+}
+
+function opslaanLokaal(){try{localStorage.setItem('apa-bronnen',JSON.stringify(opg));return true}catch(e){return false}}
+function laadLokaal(){try{var d=localStorage.getItem('apa-bronnen');if(d){opg=JSON.parse(d);renderOpg();if(opg.length){document.getElementById('saved-section').style.display='block';updateShortcut()}}}catch(e){}}
+function exportTxt(){var r=opg.filter(function(c){return !c.geenBl}).map(function(c){var t=document.createElement('div');t.innerHTML=c.bl;return t.innerText||t.textContent}).sort().join('\n\n');var blob=new Blob([r],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bronnenlijst.txt';a.click();URL.revokeObjectURL(a.href)}
+var lbls={aitool:'AI-tool (Generatieve AI)',boek:'Boek',hoofdstuk:'Hoofdstuk uit boek',tijdschrift:'Tijdschriftartikel',krant:'Krantenartikel',website:'Webpagina',rapport:'Rapport / jaarverslag',proefschrift:'Proefschrift / scriptie',youtube:'YouTube / video',naslagwerk:'Naslagwerk / encyclopedie',social:'Social media',podcast:'Podcast',film:'Film / tv-serie',muziek:'Muziek / album',congres:'Congres / presentatie',wetgeving:'Wet / jurisprudentie',dataset:'Dataset',software:'Software / app',afbeelding:'Afbeelding / figuur',leeromgeving:'Digitale leeromgeving',perscomm:'Persoonlijke communicatie'};
+
+function checkDruk(el){var v=el.value.trim(),msg=el.parentNode.querySelector("#druk-err");if(!msg)return;msg.style.display=/^\d+$/.test(v)?"block":"none"}
+function naarScherm(n){document.querySelectorAll('.screen').forEach(function(s,i){s.classList.toggle('active',i+1===n)});window.scrollTo({top:0,behavior:'smooth'});if(n===4)renderOpg()}
+function kies(t){ht=t;document.getElementById('s2-title').textContent=lbls[t]||t;renderForm(t);naarScherm(2)}
+function toggleMore(){var el=document.getElementById('more-extra'),btn=document.getElementById('more-btn'),open=el.style.display==='none';el.style.display=open?'block':'none';btn.textContent=open?'minder ▴':'meer brontypen ▾'}
+function toggleOnline(cb){var f=document.getElementById('online-fields');if(f)f.classList.toggle('open',cb.checked)}
+
+function cap(s){if(!s)return '';return s.split(' ').map(function(w){return w?w[0].toUpperCase()+w.slice(1):''}).join(' ')}
+function normVrl(v){if(!v)return '';return v.replace(/\./g,' ').trim().split(/\s+/).filter(Boolean).map(function(w){return w[0].toUpperCase()+'.'}).join(' ')}
+function fmtBl(a){var n=a.tussenvoegsel?cap(a.tussenvoegsel)+' '+a.achternaam:a.achternaam;return a.voorletters?n+', '+normVrl(a.voorletters):n}
+function fmtTxt(a){return a.tussenvoegsel?cap(a.tussenvoegsel)+' '+a.achternaam:a.achternaam}
+function autBl(aa){if(!aa.length)return '';var f=aa.map(fmtBl);if(aa.length<=20)return f.length===1?f[0]:f.slice(0,-1).join(', ')+', & '+f[f.length-1];return f.slice(0,19).join(', ')+', . . . '+f[f.length-1]}
+function autTxt(aa){if(!aa.length)return '';if(aa.length===1)return fmtTxt(aa[0]);if(aa.length===2)return fmtTxt(aa[0])+' en '+fmtTxt(aa[1]);return fmtTxt(aa[0])+' et al.'}
+function autHk(aa){if(!aa.length)return '';if(aa.length===1)return fmtTxt(aa[0]);if(aa.length===2)return fmtTxt(aa[0])+' & '+fmtTxt(aa[1]);return fmtTxt(aa[0])+' et al.'}
+function jj(v){return (v||'').trim()||'z.d.'}
+function em(t){return t?'<em>'+t+'</em>':''}
+function punt(s){if(!s)return '';s=s.trim();return /[.?!]$/.test(s)?s:s+'.'}
+function samTit(t,o){if(!o)return t;return /[.?!:]$/.test(t.trim())?t.trim()+' '+o:t.trim()+': '+o}
+function vp(doi,url,rd,rm){var d=(doi||'').trim(),u=(url||'').trim();if(d)return d.startsWith('10.')?'https://doi.org/'+d:d;if(u){if(rd&&rm)return 'Geraadpleegd op '+rd+' '+rm+', van '+u;if(rm)return 'Geraadpleegd op '+rm+', van '+u;return 'Geraadpleegd van '+u}return ''}
+function getAut(px){var rows=document.querySelectorAll('#'+px+'-rows .arow'),lijst=[];rows.forEach(function(r){var a=(r.querySelector('.a-ach')||{}).value||'';if(a.trim())lijst.push({achternaam:a.trim(),voorletters:((r.querySelector('.a-vrl')||{}).value||'').trim(),tussenvoegsel:((r.querySelector('.a-tss')||{}).value||'').trim()})});return lijst}
+function g(id){var el=document.getElementById(id);return el?el.value.trim():''}
+function gs(id){var el=document.getElementById(id);return el?el.value:''}
+
+function autVeld(lbl,hint,px){return '<div class="form-card"><div class="fsec">'+lbl+'</div>'+(hint?'<p style="font-size:.73rem;color:var(--text3);margin-bottom:.6rem;line-height:1.4">'+hint+'</p>':'')+'<div id="'+px+'-rows" class="arows"></div><button class="add-aut" onclick="addAut(\''+px+'\')">+ auteur toevoegen</button></div>'}
+function redVeld(){return '<div class="form-card"><div class="fsec">Redacteur(s) van het boek <span class="tag-opt">optioneel</span></div><p style="font-size:.73rem;color:var(--text3);margin-bottom:.6rem;line-height:1.4">Alleen invullen als het boek een bundel is met hoofdstukken door verschillende auteurs</p><div id="red-rows" class="arows"></div><button class="add-aut" onclick="addAut(\'red\')">+ redacteur toevoegen</button></div>'}
+function onlineTog(lbl){return '<div class="ff"><label class="online-toggle" for="online-cb"><input type="checkbox" id="online-cb" onchange="toggleOnline(this)"><span>'+(lbl||'Bron online gevonden / online beschikbaar')+'</span></label><div class="online-fields" id="online-fields"><div class="doi-info">&#128161; <strong>DOI of URL?</strong> Een DOI is een unieke permanente code, bijv. <code>https://doi.org/10.1007/978-90-368</code>. Gebruik de DOI als die er is &mdash; dan heb je geen URL of raadpleegdatum nodig. Je vindt de DOI bovenaan een artikel of op de pagina van de uitgever.</div><div class="field"><label>DOI <span class="tag-opt">heeft voorkeur boven URL</span></label><input type="text" id="f-doi" placeholder="https://doi.org/..."></div><div class="field"><label>URL <span class="tag-opt">als geen DOI</span></label><span class="hint">Begint altijd met https:// of http://</span><input type="text" id="f-url" placeholder="https://..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem"><div class="field"><label>Geraadpleegd op &mdash; dag</label><input type="text" id="f-raaddag" placeholder="bijv. 12"></div><div class="field"><label>Geraadpleegd &mdash; maand en jaar</label><input type="text" id="f-raaddatum" placeholder="bijv. mei 2024"></div></div></div></div>'}
+
+var forms={
+boek:function(){return autVeld('Auteur(s)','Bij een organisatie als auteur: vul de organisatienaam in als achternaam','auth')+'<div class="form-card"><div class="fsec">Publicatiegegevens</div><div class="fg"><div class="field"><label>Jaar van uitgave</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Druk / editie <span class="tag-opt">optioneel</span></label><span class="hint">Bijv.: 3e herziene druk, 2nd edition</span><input type="text" id="f-druk" placeholder="3e herziene druk" oninput="checkDruk(this)"><div id="druk-err" style="display:none;font-size:.7rem;color:#991b1b;margin-top:.25rem">Vul de volledige drukvermelding in, bijv. <strong>2e herziene druk</strong> of <strong>2nd edition</strong> — een getal alleen is niet voldoende.</div></div><div class="field ff"><label>Titel</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" placeholder="Titel van het boek"></div><div class="field ff"><label>Ondertitel <span class="tag-opt">optioneel</span></label><input type="text" id="f-ondertitel" placeholder="Eventuele ondertitel"></div><div class="field ff"><label>Uitgever</label><input type="text" id="f-uitgever" placeholder="Naam uitgever"></div>'+onlineTog('Boek online gevonden')+'</div></div>'},
+hoofdstuk:function(){return autVeld('Auteur(s) van het hoofdstuk','','auth')+'<div class="form-card"><div class="fsec">Hoofdstuk</div><div class="fg"><div class="field"><label>Jaar van uitgave</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Druk / editie <span class="tag-opt">optioneel</span></label><input type="text" id="f-druk" placeholder="2e druk" oninput="checkDruk(this)"><div id="druk-err" style="display:none;font-size:.7rem;color:#991b1b;margin-top:.25rem">Vul de volledige drukvermelding in, bijv. <strong>2e herziene druk</strong> of <strong>2nd edition</strong> — een getal alleen is niet voldoende.</div></div><div class="field ff"><label>Titel van het hoofdstuk</label><span class="hint">Staat niet cursief</span><input type="text" id="f-titel" placeholder="Titel van het hoofdstuk"></div><div class="field ff"><label>Titel van het boek</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-boek" placeholder="Titel van het boek"></div><div class="field"><label>Pagina\'s van</label><input type="text" id="f-pvan" placeholder="45"></div><div class="field"><label>Pagina\'s tot</label><input type="text" id="f-ptot" placeholder="68"></div><div class="field ff"><label>Uitgever</label><input type="text" id="f-uitgever" placeholder="Naam uitgever"></div>'+onlineTog('Hoofdstuk online gevonden')+'</div></div>'+redVeld()},
+tijdschrift:function(){return autVeld('Auteur(s)','','auth')+'<div class="form-card"><div class="fsec">Tijdschriftgegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Maand <span class="tag-opt">vaktijdschrift</span></label><input type="text" id="f-maand" placeholder="december"></div><div class="field ff"><label>Titel van het artikel</label><span class="hint">Staat niet cursief</span><input type="text" id="f-titel" placeholder="Titel van het artikel"></div><div class="field ff"><label>Naam tijdschrift</label><span class="hint">Wordt cursief. Belangrijke woorden met hoofdletter.</span><input type="text" id="f-tijdschrift" placeholder="Tijdschrift voor Communicatiewetenschap"></div><div class="field"><label>Jaargang (volume)</label><input type="text" id="f-jaargang" placeholder="48"></div><div class="field"><label>Nummer (issue)</label><input type="text" id="f-nummer" placeholder="4"></div><div class="field"><label>Pagina\'s van</label><input type="text" id="f-pvan" placeholder="209"></div><div class="field"><label>Pagina\'s tot</label><input type="text" id="f-ptot" placeholder="230"></div>'+onlineTog('Artikel online gevonden')+'</div></div>'},
+krant:function(){return autVeld('Auteur(s)','Geen auteur? Laat leeg &mdash; de titel komt dan vooraan','auth')+'<div class="form-card"><div class="fsec">Krantengegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Dag en maand</label><input type="text" id="f-dag" placeholder="15 maart"></div><div class="field ff"><label>Titel van het artikel</label><input type="text" id="f-titel" placeholder="Titel van het krantenartikel"></div><div class="field ff"><label>Naam krant</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-krant" placeholder="De Volkskrant"></div><div class="field"><label>Pagina(s) <span class="tag-opt">papier</span></label><input type="text" id="f-pagina" placeholder="pp. 4-5"></div><div class="field"></div>'+onlineTog('Artikel online gevonden')+'</div></div>'},
+website:function(){return autVeld('Auteur(s) of organisatie','Geen auteur? Vul de organisatienaam in','auth')+'<div class="form-card"><div class="fsec">Webpaginagegevens</div><div class="fg"><div class="field"><label>Jaar <span class="tag-opt">z.d. als onbekend</span></label><input type="text" id="f-jaar" placeholder="2021 of z.d."></div><div class="field"><label>Dag en maand <span class="tag-opt">optioneel</span></label><input type="text" id="f-dag" placeholder="13 januari"></div><div class="field ff"><label>Titel van de webpagina</label><input type="text" id="f-titel" placeholder="Naam van de pagina"></div><div class="field ff"><label>Naam website <span class="tag-opt">weglaten als gelijk aan auteur</span></label><input type="text" id="f-website" placeholder="Rijksoverheid, NOS Nieuws"></div>'+onlineTog('URL toevoegen')+'</div></div>'},
+rapport:function(){return autVeld('Auteur(s) of organisatie','','auth')+'<div class="form-card"><div class="fsec">Rapportgegevens</div><div class="fg"><div class="field"><label>Jaar van uitgave</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Rapportnummer / type <span class="tag-opt">optioneel</span></label><span class="hint">Bijv.: Rapport 2020-85, Brochure, Folder</span><input type="text" id="f-nr" placeholder="Rapport 2020-85"></div><div class="field ff"><label>Titel</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" placeholder="Titel van het rapport"></div><div class="field ff"><label>Uitgever <span class="tag-opt">weglaten als gelijk aan auteur</span></label><input type="text" id="f-uitgever" placeholder="Naam uitgever"></div>'+onlineTog('Rapport online gevonden')+'</div></div>'},
+proefschrift:function(){return autVeld('Auteur','','auth')+'<div class="form-card"><div class="fsec">Proefschriftgegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Type</label><select id="f-type"><option>Proefschrift</option><option>PhD thesis</option><option>Master scriptie</option><option>Bachelorthese</option><option>Afstudeeropdracht</option><option>Stageverslag</option></select></div><div class="field ff"><label>Titel</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" placeholder="Titel van het proefschrift of de scriptie"></div><div class="field ff"><label>Instelling</label><input type="text" id="f-instelling" placeholder="Universiteit Utrecht / HAN"></div><div class="field ff"><label>Databank / repository <span class="tag-opt">optioneel</span></label><input type="text" id="f-databank" placeholder="HBO Kennisbank, NARCIS, RePub"></div>'+onlineTog('Online beschikbaar')+'</div></div>'},
+youtube:function(){return autVeld('Kanaal / uploader','Naam van het kanaal dat de video heeft ge\u00fcpload &mdash; hoeft niet de maker te zijn','auth')+'<div class="form-card"><div class="fsec">Videogegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Dag en maand</label><input type="text" id="f-dag" placeholder="6 februari"></div><div class="field ff"><label>Titel van de video</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" placeholder="Titel van de video"></div><div class="field"><label>Platform</label><select id="f-platform"><option>YouTube</option><option>Vimeo</option><option>NPO Start</option><option>Anders</option></select></div><div class="field"></div>'+onlineTog('URL toevoegen')+'</div></div>'},
+naslagwerk:function(){return '<div class="form-card"><div class="fsec">Naslagwerkgegevens</div><div class="fg"><div class="field ff"><label>Lemma (het opgezochte woord)</label><span class="hint">Staat vooraan in de vermelding. In de tekstverwijzing tussen dubbele aanhalingstekens.</span><input type="text" id="f-lemma" placeholder="Bijv. ADHD, Inflatie, Autonomie"></div><div class="field"><label>Jaar <span class="tag-opt">z.d. als onbekend</span></label><input type="text" id="f-jaar" placeholder="2021 of z.d."></div><div class="field"><label>Dag en maand <span class="tag-opt">bijv. Wikipedia</span></label><input type="text" id="f-dag" placeholder="1 september"></div><div class="field ff"><label>Naam naslagwerk</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-naslagwerk" placeholder="Van Dale Online, Wikipedia, Encyclopaedia Britannica"></div>'+onlineTog('Online geraadpleegd')+'</div></div>'},
+social:function(){return autVeld('Auteur / organisatie','Bij Twitter/Instagram: vul @gebruikersnaam in het tussenvoegsel-veld in','auth')+'<div class="form-card"><div class="fsec">Berichtgegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Dag en maand</label><input type="text" id="f-dag" placeholder="9 september"></div><div class="field ff"><label>Inhoud bericht (eerste 20 woorden)</label><span class="hint">Letterlijk overnemen, inclusief hashtags. Emoji omschrijven tussen [vierkante haken].</span><input type="text" id="f-inhoud" placeholder="Eerste 20 woorden van het bericht"></div><div class="field"><label>Platform</label><select id="f-platform"><option>Facebook</option><option>Instagram</option><option>LinkedIn</option><option>Twitter / X</option><option>TikTok</option></select></div><div class="field"><label>Type bericht <span class="tag-opt">optioneel</span></label><input type="text" id="f-type" placeholder="Video, Foto, Tweet, Bericht"></div>'+onlineTog('URL toevoegen')+'</div></div>'},
+podcast:function(){return autVeld('Presentator(en)','','auth')+'<div class="form-card"><div class="fsec">Podcastgegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Dag en maand</label><input type="text" id="f-dag" placeholder="6 november"></div><div class="field ff"><label>Titel van de aflevering</label><span class="hint">Staat niet cursief</span><input type="text" id="f-titel" placeholder="Naam van de aflevering"></div><div class="field"><label>Seizoen en aflevering <span class="tag-opt">optioneel</span></label><input type="text" id="f-seizoen" placeholder="Seizoen 2, nr. 1"></div><div class="field"></div><div class="field ff"><label>Naam podcastserie</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-podcast" placeholder="Naam van de podcast"></div><div class="field ff"><label>Uitgever <span class="tag-opt">optioneel</span></label><input type="text" id="f-uitgever" placeholder="NTR, VPRO"></div>'+onlineTog('Aflevering online gevonden')+'</div></div>'},
+film:function(){return autVeld('Regisseur / executive producer','Zet de functie in het tussenvoegsel-veld: Regisseur, Director, Executive producer','auth')+'<div class="form-card"><div class="fsec">Filmgegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Type</label><select id="f-type"><option>Film</option><option>Tv-serie</option><option>Aflevering tv-serie</option><option>Documentaire</option></select></div><div class="field ff"><label>Titel</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" placeholder="Titel van de film of serie"></div><div class="field"><label>Seizoen / aflevering <span class="tag-opt">optioneel</span></label><input type="text" id="f-seizoen" placeholder="Seizoen 2, Aflevering 3"></div><div class="field"><label>Productiebedrijf</label><input type="text" id="f-producent" placeholder="Warner Bros., BNNVARA"></div></div></div>'},
+muziek:function(){return autVeld('Artiest / componist','','auth')+'<div class="form-card"><div class="fsec">Muziekgegevens</div><div class="fg"><div class="field"><label>Jaar van uitgave</label><input type="text" id="f-jaar" placeholder="1977"></div><div class="field"><label>Origineel jaar <span class="tag-opt">alleen heruitgave</span></label><input type="text" id="f-origjaar" placeholder="1791"></div><div class="field ff"><label>Titel lied of album</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" placeholder="Titel"></div><div class="field"><label>Type</label><select id="f-type"><option>Album</option><option>Lied</option><option>Songtekst</option></select></div><div class="field"><label>Platenlabel / uitgever</label><input type="text" id="f-label" placeholder="Parlophone, Sony BMG"></div>'+onlineTog('Online gevonden')+'</div></div>'},
+congres:function(){return autVeld('Spreker(s) / presentator(en)','','auth')+'<div class="form-card"><div class="fsec">Congresgegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Dag(en) en maand</label><input type="text" id="f-dag" placeholder="26-28 juni"></div><div class="field ff"><label>Titel van de bijdrage</label><input type="text" id="f-titel" placeholder="Titel van de presentatie of paper"></div><div class="field"><label>Type bijdrage</label><select id="f-type"><option>Keynote</option><option>Paperpresentatie</option><option>Posterpresentatie</option><option>Sessie</option><option>Workshop</option></select></div><div class="field"><label>Locatie</label><input type="text" id="f-locatie" placeholder="Heerlen"></div><div class="field ff"><label>Naam congres / symposium</label><input type="text" id="f-congres" placeholder="Onderwijs Research Dagen"></div>'+onlineTog('Bijdrage online beschikbaar')+'</div></div>'},
+wetgeving:function(){return '<div class="form-card"><div class="fsec">Wetgevinggegevens</div><div class="fg"><div class="field ff"><label>Naam wet of uitspraak</label><span class="hint">Staat vooraan als "auteur"</span><input type="text" id="f-naam" placeholder="Wet op het voortgezet onderwijs"></div><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="1992"></div><div class="field"><label>Dag en maand</label><input type="text" id="f-dag" placeholder="24 september"></div><div class="field"><label>Type</label><select id="f-type"><option>Wettekst</option><option>Jurisprudentie (ECLI)</option><option>Kamerstuk</option><option>Octrooi</option></select></div><div class="field"><label>Bron</label><input type="text" id="f-bron" placeholder="Overheid.nl, De Rechtspraak"></div>'+onlineTog('Online geraadpleegd')+'</div></div>'},
+dataset:function(){return autVeld('Auteur / eigenaar van de dataset','','auth')+'<div class="form-card"><div class="fsec">Datasetgegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Versienummer <span class="tag-opt">optioneel</span></label><input type="text" id="f-versie" placeholder="Version V1"></div><div class="field ff"><label>Naam van de dataset</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-naam" placeholder="Naam van de dataset"></div><div class="field ff"><label>Gepubliceerd bij</label><input type="text" id="f-uitgever" placeholder="ICPSR, CBS"></div>'+onlineTog('Dataset online beschikbaar')+'</div></div>'},
+software:function(){return autVeld('Auteur / organisatie','','auth')+'<div class="form-card"><div class="fsec">Softwaregegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Versie <span class="tag-opt">optioneel</span></label><input type="text" id="f-versie" placeholder="9.0"></div><div class="field ff"><label>Naam software / app</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-naam" placeholder="Naam van het programma of de app"></div><div class="field"><label>Type</label><select id="f-type"><option>Computerprogramma</option><option>App</option><option>Test</option></select></div><div class="field"><label>Uitgever</label><input type="text" id="f-uitgever" placeholder="Naam uitgever"></div>'+onlineTog('Online beschikbaar')+'</div></div>'},
+afbeelding:function(){return autVeld('Auteur / maker','','auth')+'<div class="form-card"><div class="info-note" style="margin-bottom:1rem">Bij overgenomen afbeeldingen staat de vermelding ook <em>onder de afbeelding</em> in je verslag. De noot onder "Bronnenlijst" geeft de tekst die daar hoort.</div><div class="fsec">Afbeeldinggegevens</div><div class="fg"><div class="field"><label>Jaar <span class="tag-opt">z.d. als onbekend</span></label><input type="text" id="f-jaar" placeholder="2021 of z.d."></div><div class="field"><label>Type</label><select id="f-type"><option>Tabel</option><option>Figuur</option><option>Foto</option><option>Grafiek</option><option>Kaart</option><option>Kunstwerk</option></select></div><div class="field ff"><label>Titel van de afbeelding</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" placeholder="Titel van de tabel of het figuur"></div><div class="field"><label>Pagina in bron <span class="tag-opt">optioneel</span></label><input type="text" id="f-pagina" placeholder="45"></div><div class="field"><label>Copyright jaar</label><input type="text" id="f-copyjaar" placeholder="2019"></div><div class="field ff"><label>Oorspronkelijke bron</label><input type="text" id="f-bron" placeholder="Onderzoek doen! of www.rivm.nl"></div><div class="field"><label>Uitgever / website</label><input type="text" id="f-uitgever" placeholder="Noordhoff Uitgevers"></div><div class="field"><label>Copyright houder</label><input type="text" id="f-copyhouder" placeholder="Noordhoff Uitgevers"></div>'+onlineTog('Afbeelding online gevonden')+'</div></div>'},
+leeromgeving:function(){return autVeld('Auteur / docent / organisatie','','auth')+'<div class="form-card"><div class="fsec">Documentgegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Type document <span class="tag-opt">optioneel</span></label><input type="text" id="f-type" placeholder="PowerPointpresentatie, Studiehandleiding"></div><div class="field ff"><label>Titel document</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" placeholder="Naam van het document"></div><div class="field ff"><label>Platform</label><input type="text" id="f-platform" placeholder="Brightspace, Canvas, Teams, Blackboard"></div>'+onlineTog('URL toevoegen')+'</div></div>'},
+aitool:function(){return '<div class="form-card"><div class="info-note" style="margin-bottom:1rem">Conform de <strong>HAN APA-richtlijn</strong> voor AI-tools: <em>Ontwikkelaar. (jaar). Naam AI-tool (Versie) [Generatieve AI]. URL</em></div><div class="fsec">AI-tool gegevens</div><div class="fg"><div class="field ff"><label>Ontwikkelaar / organisatie</label><span class="hint">Bijv.: OpenAI, Anthropic, Google, Microsoft</span><input type="text" id="f-ontwikkelaar" placeholder="OpenAI"></div><div class="field"><label>Jaar van gebruik</label><span class="hint">Het jaar waarin jij de tool gebruikte</span><input type="text" id="f-jaar" placeholder="2026"></div><div class="field ff"><label>Naam van de AI-tool</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-naam" placeholder="ChatGPT"></div><div class="field ff"><label>Versie / model <span class="tag-opt">weglaten als niet zichtbaar</span></label><span class="hint">Alleen invullen als de tool het versienummer toont. Niet alle tools (zoals Copilot) doen dat.</span><input type="text" id="f-versie" placeholder="GPT-5.5 Instant"></div><div class="field ff"><label>URL</label><span class="hint">Geen raadpleegdatum nodig &mdash; die laat je bij AI-tools altijd weg</span><input type="text" id="f-url" placeholder="https://chat.openai.com"></div></div></div>'},
+perscomm:function(){return '<div class="form-card"><div class="info-note" style="margin-bottom:1rem">Persoonlijke communicatie &mdash; gesprekken, e-mails, interviews, lessen &mdash; wordt <strong>niet</strong> opgenomen in de bronnenlijst. Alleen als verwijzing in de tekst.</div><div class="fsec">Communicatiegegevens</div><div class="fg"><div class="field ff"><label>Naam van de persoon of organisatie</label><input type="text" id="f-naam" placeholder="J. Jansen of Streekziekenhuis X"></div><div class="field"><label>Datum</label><input type="text" id="f-datum" placeholder="12 juli 2024"></div><div class="field"><label>Type communicatie <span class="tag-opt">optioneel</span></label><input type="text" id="f-type" placeholder="e-mail, gesprek, hoorcollege"></div></div></div>'}
+};
+
+function renderForm(t){var fc=document.getElementById('form-content');fc.innerHTML=forms[t]?forms[t]():'';document.getElementById('form-err').style.display='none';if(document.getElementById('auth-rows'))addAut('auth');if(document.getElementById('red-rows'))addAut('red')}
+
+function addAut(px,a,v,ts){var c=document.getElementById(px+'-rows');if(!c)return;var d=document.createElement('div');d.className='arow';d.innerHTML='<input type="text" class="a-ach" placeholder="Achternaam" value="'+(a||'')+'"><input type="text" class="a-vrl" placeholder="Voorletters (A. B.)" value="'+(v||'')+'"><input type="text" class="a-tss tc" placeholder="Tussenvoegsel" value="'+(ts||'')+'"><button class="rm-btn" onclick="this.parentNode.remove()">&#215;</button>';c.appendChild(d)}
+
+var gens={
+aitool:function(){var dev=g('f-ontwikkelaar'),jv=g('f-jaar')||'z.d.',nm=g('f-naam'),vs=g('f-versie'),url=g('f-url');if(!dev||!nm)return null;var naamStr=em(vs?nm+' ('+vs+')':nm);var bl=punt(dev)+' ('+jv+'). '+naamStr+' [Generatieve AI].';if(url)bl+=' '+url;return{bl:bl.trim(),lp:nm+' ('+jv+')',hk:'('+nm+', '+jv+')',note:'<strong>1. Geen raadpleegdatum bij URL</strong><br>Een AI-tool gebruik je vaak meerdere dagen en de uitkomst is altijd uniek. Daarom laat je de raadpleegdatum weg &mdash; alleen de URL volstaat.<br><br><strong>2. Geen versienummer zichtbaar?</strong><br>Niet alle tools (zoals Copilot) tonen een versienummer. Laat dit onderdeel dan weg: <em>OpenAI. (2026). ChatGPT [Generatieve AI]. https://chat.openai.com</em><br><br><strong>3. AI gebruikt voor spellingcontrole?</strong><br>Vermeld dit kort in je voorwoord of inleiding: <em>Voor het controleren van de spelling is gebruik gemaakt van ChatGPT (OpenAI, 2026).</em> Zet de bronvermelding ook in je bronnenlijst.<br><br><strong>4. AI gebruikt als onderzoekstool?</strong><br>Noteer naast de bronvermelding ook de gebruikte prompt en (een deel van) de chat &mdash; in de hoofdtekst of als bijlage. Zie § 2.2 in <em>De APA-richtlijnen uitgelegd &mdash; Generatieve AI</em>.'}},
+boek:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),druk=g('f-druk'),uit=g('f-uitgever'),tit=samTit(g('f-titel'),g('f-ondertitel'));if(!tit)return null;var ts=em(druk?tit+' ('+druk+')':tit),v=vp(g('f-doi'),g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+ts+'.';if(uit)bl+=' '+punt(uit);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):tit,h=aa.length?autHk(aa):tit;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'Titels van boeken staan cursief. Druk of editie staat tussen ronde haakjes na de titel, niet cursief.'}},
+hoofdstuk:function(){var aa=getAut('auth'),ra=getAut('red'),jv=jj(g('f-jaar')),druk=g('f-druk'),uit=g('f-uitgever'),th=g('f-titel'),tb=g('f-boek'),pv=g('f-pvan'),pt=g('f-ptot');if(!th||!tb)return null;var ps=pv&&pt?'pp. '+pv+'-'+pt:pv?'p. '+pv:'';var rs='';if(ra.length){var rn=ra.map(function(r){var nn=normVrl(r.voorletters);if(r.tussenvoegsel)nn+=' '+cap(r.tussenvoegsel);return(nn+' '+r.achternaam).trim()});rs=rn.join(', ')+' ('+(ra.length===1?'Red.':'Reds.')+'), '}var bstr=em(druk&&ps?tb+' ('+druk+', '+ps+')':druk?tb+' ('+druk+')':ps?tb+' ('+ps+')':tb);var v=vp(g('f-doi'),g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+punt(th)+' In '+rs+bstr+'.';if(uit)bl+=' '+punt(uit);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):th,h=aa.length?autHk(aa):th;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'De hoofdstuktitel staat niet cursief. De boektitel staat cursief. De voorletters van de redacteur(s) staan v\u00f3\u00f3r de achternaam.'}},
+tijdschrift:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),ma=g('f-maand'),ti=g('f-titel'),ts=g('f-tijdschrift'),jg=g('f-jaargang'),nr=g('f-nummer'),pv=g('f-pvan'),pt=g('f-ptot');if(!ti||!ts)return null;var js=ma?jv+', '+ma:jv;var tss=em(ts);if(jg)tss+=', '+em(jg);if(nr)tss+='('+nr+')';var ps=pv&&pt?', '+pv+'-'+pt:pv?', '+pv:'';var v=vp(g('f-doi'),g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+js+'). '+punt(ti)+' '+tss+ps;if(!v)bl+='.';else bl+='. '+v;var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'De naam van het tijdschrift \u00e9n de jaargang staan cursief. De artikeltitel staat niet cursief. Met DOI: geen URL of raadpleegdatum nodig.'}},
+krant:function(){var aa=getAut('auth'),jv=g('f-jaar')||'z.d.',da=g('f-dag'),ti=g('f-titel'),kr=g('f-krant'),pg=g('f-pagina');if(!ti||!kr)return null;var js=da?jv+', '+da:jv;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='',n='',h='';if(!aa.length){bl=punt(ti)+' ('+js+'). '+em(kr);if(pg)bl+=', '+pg;if(!v)bl+='.';else bl+='. '+v;n='"'+ti.split(' ').slice(0,5).join(' ')+'"';h=n}else{bl=punt(autBl(aa));bl+=' ('+js+'). '+punt(ti)+' '+em(kr);if(pg)bl+=', '+pg;if(!v)bl+='.';else bl+='. '+v;n=autTxt(aa);h=autHk(aa)}return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'De naam van de krant staat cursief. Geen auteur? Dan staat de titel vooraan.'}},
+website:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),da=g('f-dag'),ti=g('f-titel'),ws=g('f-website');if(!ti)return null;var js=da?jv+', '+da:jv;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+js+'). '+punt(ti);if(ws)bl+=' '+punt(ws);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'Vermeld altijd de datum van raadplegen bij webpagina\'s. Laat de websitenaam weg als die gelijk is aan de auteur.'}},
+rapport:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),nr=g('f-nr'),ti=g('f-titel'),uit=g('f-uitgever');if(!ti)return null;var ts=em(nr?ti+' ('+nr+')':ti);var v=vp(g('f-doi'),g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+ts+'.';if(uit)bl+=' '+punt(uit);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'De rapporttitel staat cursief. Als de organisatie ook uitgever is, laat de uitgever dan weg.'}},
+proefschrift:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),tp=gs('f-type'),ti=g('f-titel'),inst=g('f-instelling'),db=g('f-databank');if(!ti)return null;var om=inst?tp+', '+inst:tp;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+em(ti)+' ['+om+'].';if(db&&!v)bl+=' '+punt(db);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'Vermeld de naam van de databank of repository als het proefschrift online staat.'}},
+youtube:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),da=g('f-dag'),ti=g('f-titel'),pl=gs('f-platform');if(!ti)return null;var js=da?jv+', '+da:jv;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+js+'). '+em(ti)+' [Video]. '+punt(pl);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'Vermeld de naam van het kanaal dat de video heeft ge\u00fcpload.'}},
+naslagwerk:function(){var le=g('f-lemma'),jv=jj(g('f-jaar')),da=g('f-dag'),nas=g('f-naslagwerk');if(!le||!nas)return null;var js=da?jv+', '+da:jv;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl=punt(le)+' ('+js+'). In '+em(nas)+'.';if(v)bl+=' '+v;return{bl:bl.trim(),lp:'"'+le+'" ('+jv+')',hk:'("'+le+'", '+jv+')',note:'Het lemma staat vooraan. In de tekstverwijzing staat het lemma tussen dubbele aanhalingstekens.'}},
+social:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),da=g('f-dag'),inh=g('f-inhoud'),pl=gs('f-platform'),tp=g('f-type');if(!inh)return null;var js=da?jv+', '+da:jv;var ts=tp?' ['+tp+']':'';var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+js+'). '+punt(inh)+ts+'. '+punt(pl);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):inh.split(' ').slice(0,3).join(' '),h=aa.length?autHk(aa):n;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'Neem de eerste 20 woorden letterlijk over, inclusief hashtags.'}},
+podcast:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),da=g('f-dag'),ti=g('f-titel'),sz=g('f-seizoen'),pod=g('f-podcast'),uit=g('f-uitgever');if(!ti||!pod)return null;var js=da?jv+', '+da:jv;var ss=sz?' ('+sz+')':'';var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+js+'). '+punt(ti)+ss+' [Aflevering audio podcast]. In '+em(pod)+'.';if(uit)bl+=' '+punt(uit);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):pod,h=aa.length?autHk(aa):pod;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'De naam van de podcastserie staat cursief. De afleveringstitel staat niet cursief.'}},
+film:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),ti=g('f-titel'),tp=gs('f-type'),sz=g('f-seizoen'),pr=g('f-producent');if(!ti)return null;var ss=sz?'; '+sz:'';var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+em(ti)+' ['+tp+ss+'].';if(pr)bl+=' '+punt(pr);var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'De filmtitel staat cursief. Noem de regisseur als auteur.'}},
+muziek:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),oj=g('f-origjaar'),ti=g('f-titel'),tp=gs('f-type'),lb=g('f-label');if(!ti)return null;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var hj=oj?oj+'/'+jv:jv;var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+em(ti)+' ['+tp+'].';if(lb)bl+=' '+punt(lb);if(oj)bl+=' (Origineel werk gepubliceerd in '+oj+')';if(v)bl+=' '+v;var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+hj+')',hk:'('+h+', '+hj+')',note:'De albumtitel staat cursief. Bij heruitgave: beide jaartallen vermelden.'}},
+congres:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),da=g('f-dag'),ti=g('f-titel'),tp=gs('f-type'),cg=g('f-congres'),lo=g('f-locatie');if(!ti||!cg)return null;var js=da?jv+', '+da:jv;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+js+'). '+punt(ti)+' ['+tp+']. '+punt(cg);if(lo)bl+=' '+punt(lo);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'Noem begin- en einddatum als het congres meerdere dagen duurde.'}},
+wetgeving:function(){var nm=g('f-naam'),jv=g('f-jaar')||'z.d.',da=g('f-dag'),br=g('f-bron');if(!nm)return null;var js=da?jv+', '+da:jv;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl=punt(nm)+' ('+js+').';if(br)bl+=' '+punt(br);if(v)bl+=' '+v;return{bl:bl.trim(),lp:nm+' ('+jv+')',hk:'('+nm+', '+jv+')',note:'Alle Nederlandse wetten staan op wetten.overheid.nl.'}},
+dataset:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),vs=g('f-versie'),nm=g('f-naam'),uit=g('f-uitgever');if(!nm)return null;var ns=em(vs?nm+' ('+vs+')':nm);var v=vp(g('f-doi'),g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+ns+' [Dataset].';if(uit)bl+=' '+punt(uit);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):nm,h=aa.length?autHk(aa):nm;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'De naam van de dataset staat cursief.'}},
+software:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),vs=g('f-versie'),nm=g('f-naam'),tp=gs('f-type'),uit=g('f-uitgever');if(!nm)return null;var ns=em(vs?nm+' (Versie '+vs+')':nm);var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+ns+' ['+tp+'].';if(uit)bl+=' '+punt(uit);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):nm,h=aa.length?autHk(aa):nm;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'Bekende programma\'s als Word en Excel hoeven niet vermeld te worden.'}},
+afbeelding:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),tp=gs('f-type'),ti=g('f-titel'),pg=g('f-pagina'),br=g('f-bron'),uit=g('f-uitgever'),cj=g('f-copyjaar'),ch=g('f-copyhouder');if(!ti)return null;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+em(ti)+'.';if(uit)bl+=' '+punt(uit);if(v)bl+=' '+v;var ps=pg?' (p. '+pg+')':'';var as=aa.length?autBl(aa).replace(/\.$/, ''):'';var cs=cj&&ch?' Copyright '+cj+', '+ch+'.':'';var op='Overgenomen uit '+em(br||ti)+ps;if(as)op+=' door '+as+', '+jv;if(uit)op+=', '+uit;op+='.'+cs;var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'Tekst onder de afbeelding in je verslag: <em>Opmerking. '+op.replace(/<\/?em>/g,'')+'</em>'}},
+leeromgeving:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),tp=g('f-type'),ti=g('f-titel'),pl=g('f-platform');if(!ti||!pl)return null;var ts=tp?' ['+tp+']':'';var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl='';if(aa.length)bl+=punt(autBl(aa));bl+=' ('+jv+'). '+em(ti)+ts+'. '+punt(pl);if(v)bl+=' '+v;var n=aa.length?autTxt(aa):ti,h=aa.length?autHk(aa):ti;return{bl:bl.trim(),lp:n+' ('+jv+')',hk:'('+h+', '+jv+')',note:'Verwijs naar een document achter inlog alleen als de lezer er zelf ook bij kan.'}},
+perscomm:function(){var nm=g('f-naam'),dt=g('f-datum');if(!nm)return null;return{bl:'Persoonlijke communicatie wordt niet opgenomen in de bronnenlijst.',lp:nm+' (persoonlijke communicatie, '+(dt||'datum')+')',hk:'('+nm+', persoonlijke communicatie, '+(dt||'datum')+')',note:'Persoonlijke communicatie staat niet in de bronnenlijst &mdash; alleen als verwijzing in de tekst.',geenBl:true}}
+};
+
+function genereer(){var err=document.getElementById('form-err');err.style.display='none';if(!gens[ht])return;var r=gens[ht]();if(!r){err.textContent='Vul minimaal de vereiste velden in.';err.style.display='block';return}lastR=r;document.getElementById('c-bl').innerHTML=r.bl;document.getElementById('c-lp').innerHTML=r.lp;document.getElementById('c-hk').innerHTML=r.hk;var note=document.getElementById('c-bl-note');if(r.note){note.innerHTML=r.note;note.style.display='block'}else{note.style.display='none'}if(r.geenBl){document.getElementById('c-bl').style.cssText='color:#9a9590;font-style:italic'}else{document.getElementById('c-bl').style.cssText=''}naarScherm(3);swTab(0);}
+function swTab(i){
+  document.querySelectorAll('#s3 .res-tab').forEach(function(t,j){t.classList.toggle('active',i===j)});
+  document.getElementById('rp0').style.display=i===0?'block':'none';
+  document.getElementById('rp1').style.display=i===1?'block':'none';
+  document.getElementById('rp2').style.display=i===2?'block':'none';
+}
+function maakRichHtml(el){
+  var html=el.innerHTML;
+  var isbl=el.classList.contains('bl')||el.id==='c-bl'||(el.id&&el.id.endsWith('-0'));
+  if(isbl){
+    return '<!DOCTYPE html><html><head><style>'
+      +'@page WordSection1 {}'
+      +'div.WordSection1{page:WordSection1;}'
+      +'p.apa{'
+      +'margin-top:0pt;margin-right:0pt;margin-bottom:0pt;margin-left:36.0pt;'
+      +'mso-para-margin-top:0;mso-para-margin-right:0;mso-para-margin-bottom:0;mso-para-margin-left:0gd;'
+      +'text-indent:-36.0pt;'
+      +'line-height:200%;'
+      +'font-family:"Times New Roman",serif;font-size:12.0pt;'
+      +'mso-fareast-font-family:"Times New Roman";'
+      +'}'
+      +'em{font-style:italic;mso-bidi-font-style:italic;}'
+      +'</style></head>'
+      +'<body><div class=WordSection1>'
+      +'<p class=apa>'+html+'</p>'
+      +'</div></body></html>';
+  }else{
+    return '<!DOCTYPE html><html><head><style>'
+      +'p.apa{font-family:"Times New Roman",serif;font-size:12.0pt;line-height:200%;margin:0;}'
+      +'em{font-style:italic;}'
+      +'</style></head><body>'
+      +'<p class=apa>'+html+'</p>'
+      +'</body></html>';
+  }
+}
+
+
+function kopieerWord(id,btn){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var done=function(){
+    var o=btn.textContent;btn.textContent='Gekopieerd ✓';btn.classList.add('done');
+    setTimeout(function(){btn.textContent=o;btn.classList.remove('done')},2000);
+  };
+  var richHtml=maakRichHtml(el);
+  var plain=el.innerText||el.textContent;
+  if(window.ClipboardItem){
+    Promise.resolve().then(function(){
+      return navigator.clipboard.write([new ClipboardItem({
+        'text/html':new Blob([richHtml],{type:'text/html'}),
+        'text/plain':new Blob([plain],{type:'text/plain'})
+      })]);
+    }).then(done).catch(function(){
+      // Fallback: execCommand
+      var tmp=document.createElement('div');
+      tmp.style.cssText='position:fixed;top:-9999px;left:-9999px';
+      tmp.contentEditable='true';
+      tmp.innerHTML=richHtml;
+      document.body.appendChild(tmp);
+      var range=document.createRange();
+      range.selectNodeContents(tmp);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      document.body.removeChild(tmp);
+      done();
+    });
+  }else{
+    navigator.clipboard.writeText(plain).then(done);
+  }
+}
+
+
+function kopieer(id,btn){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var plain=el.innerText||el.textContent;
+  navigator.clipboard.writeText(plain).then(function(){
+    var o=btn.textContent;btn.textContent='Gekopieerd ✓';btn.classList.add('done');
+    setTimeout(function(){btn.textContent=o;btn.classList.remove('done')},2000);
+  });
+}
+
+function kopieerSaved(id,btn){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var done=function(){
+    var o=btn.textContent;btn.textContent='Gekopieerd ✓';
+    setTimeout(function(){btn.textContent=o},2000);
+  };
+  var richHtml=maakRichHtml(el);
+  var plain=el.innerText||el.textContent;
+  var tmp=document.createElement('div');
+  tmp.style.cssText='position:fixed;top:-9999px;left:-9999px;opacity:0';
+  tmp.contentEditable='true';
+  tmp.innerHTML=richHtml;
+  document.body.appendChild(tmp);
+  var range=document.createRange();
+  range.selectNodeContents(tmp);
+  var sel=window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  var ok=false;
+  try{ok=document.execCommand('copy');}catch(e){}
+  sel.removeAllRanges();
+  document.body.removeChild(tmp);
+  if(ok){done();}
+  else{navigator.clipboard.writeText(plain).then(done).catch(done);}
+}
+
+function kopieerRich(id,btn){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var html=maakRichHtml(el);
+  var plain=el.innerText||el.textContent;
+  try{
+    var blob=new Blob([html],{type:'text/html'});
+    var blobPlain=new Blob([plain],{type:'text/plain'});
+    var item=new ClipboardItem({'text/html':blob,'text/plain':blobPlain});
+    navigator.clipboard.write([item]).then(function(){
+      var o=btn.textContent;btn.textContent='Gekopieerd ✓';
+      setTimeout(function(){btn.textContent=o},2000);
+    });
+  }catch(e){
+    navigator.clipboard.writeText(plain).then(function(){
+      var o=btn.textContent;btn.textContent='Gekopieerd (platte tekst)';
+      setTimeout(function(){btn.textContent=o},2000);
+    });
+  }
+}
+function verw(i){opg.splice(i,1);renderOpg();opslaanLokaal()}
+function kopieerAlles(){var r=opg.filter(function(c){return !c.geenBl}).map(function(c){var t=document.createElement('div');t.innerHTML=c.bl;return t.innerText||t.textContent}).sort().join('\n\n');navigator.clipboard.writeText(r);var btn=event.target;btn.textContent='Gekopieerd \u2713';setTimeout(function(){btn.textContent='Kopieer volledige bronnenlijst'},2000)}
+laadLokaal();
+</script>
+</body>
+</html>
