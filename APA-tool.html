@@ -742,10 +742,13 @@ async function laadPubliekeLibriotheek(){
     var rows=await sbFetch('gedeelde_bronnen?klascode=eq.PUBLIEK&order=aangemaakt_op.desc','GET');
     pubRows=rows;
     if(spinner)spinner.style.display='none';
-    filterPubliek();
+    try{filterPubliek();}catch(fe){
+      console.error('filterPubliek fout:',fe);
+      list.innerHTML='<div style="font-size:.8rem;color:#991b1b">Fout bij weergeven: '+fe.message+'</div>';
+    }
   }catch(e){
     if(spinner)spinner.style.display='none';
-    list.innerHTML='<div style="font-size:.8rem;color:#991b1b">Kon bibliotheek niet laden.</div>';
+    list.innerHTML='<div style="font-size:.8rem;color:#991b1b">Kon bibliotheek niet laden: '+e.message+'</div>';
   }
 }
 
