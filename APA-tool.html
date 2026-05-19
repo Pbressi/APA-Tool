@@ -1173,7 +1173,7 @@ function exportTxt(){var r=opg.filter(function(c){return !c.geenBl}).map(functio
 var lbls={aitool:'AI-tool (Generatieve AI)',boek:'Boek',hoofdstuk:'Hoofdstuk uit boek',tijdschrift:'Tijdschriftartikel',krant:'Krantenartikel',website:'Webpagina',rapport:'Rapport / jaarverslag',proefschrift:'Proefschrift / scriptie',youtube:'YouTube / video',naslagwerk:'Naslagwerk / encyclopedie',social:'Social media',podcast:'Podcast',film:'Film / tv-serie',muziek:'Muziek / album',congres:'Congres / presentatie',wetgeving:'Wet / jurisprudentie',dataset:'Dataset',software:'Software / app',afbeelding:'Afbeelding / figuur',leeromgeving:'Digitale leeromgeving',perscomm:'Persoonlijke communicatie'};
 
 function checkDruk(el){var v=el.value.trim(),msg=el.parentNode.querySelector("#druk-err");if(!msg)return;msg.style.display=/^\d+$/.test(v)?"block":"none"}
-function naarScherm(n){document.querySelectorAll('.screen').forEach(function(s,i){s.classList.toggle('active',i+1===n)});window.scrollTo({top:0,behavior:'smooth'});if(n===4)renderOpg()}
+function naarScherm(n){document.querySelectorAll('.screen').forEach(function(s,i){s.classList.toggle('active',i+1===n)});window.scrollTo({top:0,behavior:'smooth'});if(n===4)renderOpg();if(n===6)setTimeout(function(){laadPubliekeLibriotheek();},50);}
 function kies(t){ht=t;document.getElementById('s2-title').textContent=lbls[t]||t;renderForm(t);naarScherm(2)}
 function toggleMore(){var el=document.getElementById('more-extra'),btn=document.getElementById('more-btn'),open=el.style.display==='none';el.style.display=open?'block':'none';btn.textContent=open?'minder ▴':'meer brontypen ▾'}
 function toggleOnline(cb){var f=document.getElementById('online-fields');if(f)f.classList.toggle('open',cb.checked)}
