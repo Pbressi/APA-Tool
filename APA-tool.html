@@ -410,6 +410,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
         <div id="klascodes-lijst" style="margin-bottom:.75rem">
           <div style="font-size:.8rem;color:var(--text3)">Laden…</div>
         </div>
+        <div style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin:.85rem 0 .5rem">Ontvangen feedback</div>
+        <div id="feedback-lijst"></div>
       </div>
     </div>
   </div>
@@ -496,6 +498,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
         <div style="font-size:.78rem;color:var(--text2);margin-bottom:1rem;line-height:1.55">Verwijderknoppen zijn zichtbaar naast elke bron.</div>
         <div style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem">Alle klascodes in publieke bibliotheek</div>
         <div id="pub-klascodes-lijst"><div style="font-size:.8rem;color:var(--text3)">Laden…</div></div>
+        <div style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin:.85rem 0 .5rem">Ontvangen feedback</div>
+        <div id="feedback-lijst-pub"></div>
       </div>
     </div>
   </div>
@@ -788,6 +792,7 @@ async function checkPubBeheer(){
     document.getElementById('pub-beheer-toggle').style.display='none';
     renderPubBeheerKnoppen(true);
     laadPubKlascodes();
+    laadFeedbackNaar('feedback-lijst-pub');
   }else{
     document.getElementById('pub-beheer-err').style.display='block';
   }
@@ -1295,7 +1300,37 @@ async function stuurFeedback(){
   }
 }
 
+async function laadFeedbackNaar(targetId){
+  var lijst=document.getElementById(targetId);
+  if(!lijst)return;
+  lijst.innerHTML='<div style="font-size:.8rem;color:var(--text3)">Laden...</div>';
+  try{
+    var rows=await sbFetch('feedback?order=aangemaakt_op.desc','GET');
+    if(!rows.length){lijst.innerHTML='<div style="font-size:.8rem;color:var(--text3)">Geen feedback ontvangen.</div>';return;}
+    lijst.innerHTML='';
+    rows.forEach(function(r){
+      var d=document.createElement('div');
+      d.style.cssText='background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);padding:.75rem 1rem;margin-bottom:.5rem;position:relative';
+      var datum=new Date(r.aangemaakt_op).toLocaleDateString('nl-NL')+' '+new Date(r.aangemaakt_op).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});
+      var meta=(r.naam||'Anoniem')+(r.email?' &middot; <a href="mailto:'+r.email+'" style="color:var(--navy)">'+r.email+'</a>':'')+' &middot; '+datum;
+      var delbtn=document.createElement('button');
+      delbtn.textContent='Verwijder';
+      delbtn.style.cssText='position:absolute;top:.5rem;right:.5rem;font-size:.72rem;color:var(--text3);background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:.2rem .45rem';
+      (function(rid,tid){delbtn.onclick=function(){verwijderFeedback(rid,this,tid);};})(r.id,targetId);
+      d.innerHTML='<div style="font-size:.7rem;color:var(--text3);margin-bottom:.4rem">'+meta+'</div>'
+        +'<div style="font-size:.85rem;color:var(--text);line-height:1.6">'+r.bericht+'</div>';
+      d.appendChild(delbtn);
+      lijst.appendChild(d);
+    });
+  }catch(e){
+    lijst.innerHTML='<div style="font-size:.8rem;color:#991b1b">Kon feedback niet laden.</div>';
+  }
+}
+
 async function laadFeedback(){
+  laadFeedbackNaar('feedback-lijst');
+}
+async function laadFeedback_REMOVE(){
   var lijst=document.getElementById('feedback-lijst');
   if(!lijst)return;
   lijst.innerHTML='<div style="font-size:.8rem;color:var(--text3)">Laden...</div>';
@@ -1322,10 +1357,14 @@ async function laadFeedback(){
   }
 }
 
-async function verwijderFeedback(id,btn){
+async function verwijderFeedback(id,btn,targetId){
   try{
     await sbFetch('feedback?id=eq.'+id,'DELETE');
     btn.closest('div[style]').remove();
+    // Also remove from other feedback list if visible
+    var otherId=targetId==='feedback-lijst'?'feedback-lijst-pub':'feedback-lijst';
+    var other=document.getElementById(otherId);
+    if(other&&other.children.length)laadFeedbackNaar(otherId);
   }catch(e){alert('Verwijderen mislukt.');}
 }
 
