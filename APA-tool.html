@@ -104,22 +104,69 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .tag-groen{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
 .tag-oranje{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
 .tag-rood{background:#fff1f1;color:#991b1b;border:1px solid #fecaca}
+
+.feedback-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto}
+.feedback-overlay.open{display:flex}
+.feedback-box{background:var(--surface);border-radius:var(--r);max-width:480px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.2)}
 </style>
 </head>
 <body>
 
 <div class="screen active" id="s1">
-  <div class="copyright">&copy; Patrick Bres</div>
-  <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1rem;gap:.4rem;flex-wrap:wrap">
-    <div style="display:flex;gap:.4rem">
-      <button onclick="naarScherm(6)" style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.3rem .75rem;cursor:pointer;transition:all .14s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">Publieke bibliotheek</button>
-      <button onclick="naarScherm(5)" style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.3rem .75rem;cursor:pointer;transition:all .14s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">Gedeeld met mijn klas</button>
+  <div style="display:flex;justify-content:flex-end;padding-top:1rem">
+  <div style="display:flex;gap:.4rem;align-items:center">
+    <button onclick="document.getElementById('about-overlay').classList.add('open')" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text3)'">!</button>
+    <button onclick="document.getElementById('help-overlay').classList.add('open')" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text3)'">?</button>
+    <button onclick="document.getElementById('feedback-overlay').classList.add('open')" style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.3rem .75rem;cursor:pointer;transition:all .14s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">Feedback</button>
+  </div>
+  </div>
+
+  <div style="text-align:center;padding:3rem 0 2.5rem">
+    <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:2.2rem;font-weight:500;color:var(--navy);letter-spacing:-.02em;margin-bottom:.4rem">APA Bronvermelding</h1>
+
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:.75rem;max-width:420px;margin:0 auto">
+    <button onclick="naarScherm(2)" style="width:100%;padding:1.75rem 1.5rem;background:var(--navy);color:white;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .14s;display:flex;align-items:center;gap:1.25rem;text-align:left" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+      <span style="font-size:2.2rem;line-height:1;flex-shrink:0">&#10133;</span>
+      <div>
+        <div style="font-size:1.05rem;font-weight:700;letter-spacing:.01em">Bron toevoegen</div>
+        <div style="font-size:.78rem;opacity:.75;margin-top:.2rem;font-weight:400">Genereer een correcte APA-vermelding</div>
+      </div>
+    </button>
+    <button onclick="naarScherm(7)" style="width:100%;padding:1.75rem 1.5rem;background:var(--surface);color:var(--navy);border:2px solid var(--navy);border-radius:var(--r);font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .14s;display:flex;align-items:center;gap:1.25rem;text-align:left" onmouseover="this.style.background='var(--navy)';this.style.color='white'" onmouseout="this.style.background='var(--surface)';this.style.color='var(--navy)'">
+      <span style="font-size:2.2rem;line-height:1;flex-shrink:0">&#128218;</span>
+      <div>
+        <div style="font-size:1.05rem;font-weight:700;letter-spacing:.01em">Publieke bibliotheek</div>
+        <div style="font-size:.78rem;opacity:.65;margin-top:.2rem;font-weight:400">Bronnen gedeeld door iedereen</div>
+      </div>
+    </button>
+    <button onclick="naarScherm(6)" style="width:100%;padding:1.75rem 1.5rem;background:var(--surface);color:var(--navy);border:2px solid var(--navy);border-radius:var(--r);font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .14s;display:flex;align-items:center;gap:1.25rem;text-align:left" onmouseover="this.style.background='var(--navy)';this.style.color='white'" onmouseout="this.style.background='var(--surface)';this.style.color='var(--navy)'">
+      <span style="font-size:2.2rem;line-height:1;flex-shrink:0">&#128101;</span>
+      <div>
+        <div style="font-size:1.05rem;font-weight:700;letter-spacing:.01em">Gedeeld met mijn klas</div>
+        <div style="font-size:.78rem;opacity:.65;margin-top:.2rem;font-weight:400">Bronnen binnen jouw klascode</div>
+      </div>
+    </button>
+  </div>
+
+  <div class="copyright" style="padding:2.5rem 0 0;text-align:center">&copy; Patrick Bres</div>
+</div>
+
+<div class="screen" id="s2">
+  <div class="s2-top" style="justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <button class="back-btn" onclick="naarScherm(1)">&#8592;</button>
+      <h2 class="s2-title">Brontype kiezen</h2>
     </div>
-    <div style="display:flex;gap:.4rem;align-items:center">
-      <button id="saved-shortcut" onclick="naarScherm(4)" style="display:none;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.3rem .75rem;cursor:pointer;transition:all .14s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">Opgeslagen (<span id="s1-saved-cnt">0</span>)</button>
-      <button onclick="document.getElementById('help-overlay').classList.add('open')" style="width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text3)'">?</button>
+    <div style="display:flex;gap:.3rem;align-items:center">
+      <button onclick="document.getElementById('about-overlay').classList.add('open')" style="width:24px;height:24px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-size:.78rem;font-weight:600;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">!</button>
+      <button onclick="document.getElementById('help-overlay').classList.add('open')" style="width:24px;height:24px;border-radius:50%;border:1px solid var(--border);background:var(--surface);font-size:.78rem;font-weight:600;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">?</button>
+      <button onclick="document.getElementById('feedback-overlay').classList.add('open')" style="font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.25rem .6rem;cursor:pointer">Feedback</button>
     </div>
   </div>
+  <div class="copyright">&copy; Patrick Bres</div>
+
   <div class="s1-head">
     <h1>APA Bronvermelding</h1>
     <p>Kies het brontype om te beginnen</p>
@@ -183,10 +230,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   <div class="copyright">&copy; Patrick Bres</div>
 </div>
 
-<div class="screen" id="s2">
+<div class="screen" id="s3">
   <div class="copyright" style="padding:1rem 0 0">&copy; Patrick Bres</div>
   <div class="s2-top">
-    <button class="back-btn" onclick="naarScherm(1)">&#8592;</button>
+    <button class="back-btn" onclick="naarScherm(2)">&#8592;</button>
     <h2 class="s2-title" id="s2-title">Boek</h2>
   </div>
   <div id="form-content"></div>
@@ -195,10 +242,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   <div class="copyright">&copy; Patrick Bres</div>
 </div>
 
-<div class="screen" id="s3">
+<div class="screen" id="s4">
   <div class="copyright" style="padding:1rem 0 0">&copy; Patrick Bres</div>
   <div class="s2-top">
-    <button class="back-btn" onclick="naarScherm(2)">&#8592;</button>
+    <button class="back-btn" onclick="naarScherm(3)">&#8592;</button>
     <h2 class="s2-title">Resultaat</h2>
   </div>
 
@@ -235,8 +282,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   </div>
 
   <div class="action-row" style="margin-top:.75rem">
-    <button class="act-btn primary" onclick="slaOp();naarScherm(4)">Opslaan in lijst</button>
-    <button class="act-btn" onclick="naarScherm(1)">Nieuwe bron</button>
+    <button class="act-btn primary" onclick="slaOp();naarScherm(5)">Opslaan in lijst</button>
+    <button class="act-btn" onclick="naarScherm(2)">Nieuwe bron</button>
   </div>
 
   <div class="result-card" style="margin-top:.75rem">
@@ -263,7 +310,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   <div class="copyright">&copy; Patrick Bres</div>
 </div>
 
-<div class="screen" id="s4">
+<div class="screen" id="s5">
   <div class="s2-top">
     <button class="back-btn" onclick="naarScherm(1)">&#8592;</button>
     <h2 class="s2-title">Mijn bronnen</h2>
@@ -285,7 +332,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   <div class="copyright" style="padding:1rem 0 0">&copy; Patrick Bres</div>
 </div>
 
-<div class="screen" id="s5">
+<div class="screen" id="s6">
   <div class="s2-top">
     <button class="back-btn" onclick="naarScherm(1)">&#8592;</button>
     <h2 class="s2-title">Gedeeld met mijn klas</h2>
@@ -387,7 +434,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 </div>
 
 <!-- ══ SCHERM 6: PUBLIEKE BIBLIOTHEEK ═══════════════════════════════════ -->
-<div class="screen" id="s6">
+<div class="screen" id="s7">
   <div class="s2-top">
     <button class="back-btn" onclick="naarScherm(1)">&#8592;</button>
     <h2 class="s2-title">Publieke bibliotheek</h2>
@@ -536,9 +583,67 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
   </div>
 </div>
 
+<!-- About overlay -->
+<div class="help-overlay" id="about-overlay" onclick="sluitAbout(event)">
+  <div class="help-box">
+    <div class="help-head">
+      <h2>Over deze tool</h2>
+      <button class="help-close" onclick="sluitAbout()">&#215;</button>
+    </div>
+    <div class="help-body">
+
+      <div class="help-section">
+        <p>Deze tool is gemaakt <strong>voor studenten, door studenten</strong>. Iedereen die bronnen moet vermelden — en dat zijn we allemaal — kan hier terecht voor correcte APA-vermeldingen.</p>
+      </div>
+
+      <div class="help-section">
+        <h3>Samen bouwen aan een betrouwbare database</h3>
+        <p>Door je bronnen te delen draag je bij aan een groeiende bibliotheek die iedereen ten goede komt. Hoe meer mensen bijdragen, hoe waardevoller de database wordt. Je kunt hiermee voorkomen dat anderen dezelfde fouten maken — en via de URL-tab kunnen bronnen direct worden opgezocht.</p>
+        <p><strong>Deel je bronnen, ook als je ze al gevonden hebt.</strong></p>
+      </div>
+
+      <div class="help-section">
+        <h3>Kwaliteit door samen stemmen</h3>
+        <p>Het stemsysteem werkt alleen als mensen het ook echt gebruiken. Een bron met veel positieve stemmen blijft behouden. Bronnen met een lage waardering verdwijnen automatisch na vijf dagen. Zo blijft de database betrouwbaar zonder dat iemand alles hoeft te controleren.</p>
+      </div>
+
+      <div class="help-section">
+        <h3>Disclaimer</h3>
+        <p>De tool genereert vermeldingen op basis van de ingevoerde gegevens. De eindverantwoordelijkheid voor correctheid ligt altijd bij de gebruiker. Controleer het resultaat voordat je het inlevert.</p>
+      </div>
+
+      <div class="help-section">
+        <h3>Feedback & wensen</h3>
+        <p>Heb je een tip, een fout gevonden of wil je een functionaliteit aanvragen? Gebruik de feedbackknop op het startscherm. Alle inzendingen worden gelezen en waar mogelijk verwerkt.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Feedback overlay -->
+<div class="feedback-overlay" id="feedback-overlay" onclick="sluitFeedback(event)">
+  <div class="feedback-box">
+    <div class="help-head">
+      <h2 style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:500;color:var(--navy)">Feedback & wensen</h2>
+      <button class="help-close" onclick="sluitFeedback()">&#215;</button>
+    </div>
+    <div style="padding:1.25rem 1.5rem">
+      <p style="font-size:.82rem;color:var(--text2);margin-bottom:1rem;line-height:1.55">Heb je feedback, een wens of een tip? Laat het weten. Naam en e-mail zijn optioneel maar handig als je een reactie wilt.</p>
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        <input type="text" id="fb-naam" placeholder="Naam (optioneel)" style="padding:.5rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--text);width:100%">
+        <input type="email" id="fb-email" placeholder="E-mailadres (optioneel)" style="padding:.5rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--text);width:100%">
+        <textarea id="fb-bericht" placeholder="Je feedback, wens of tip..." style="padding:.5rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--text);width:100%;min-height:120px;resize:vertical"></textarea>
+        <button onclick="stuurFeedback()" style="width:100%;padding:.65rem;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer">Verstuur</button>
+        <div id="fb-melding" style="display:none;font-size:.78rem;padding:.4rem .6rem;border-radius:var(--rsm)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 var ht='',opg=[],lastR=null;
-var BEHEER_CODE='patrick-apa';
+var BEHEER_HASH='30f9c2cd26b3e29697ea43a334ddffea48897edf6918a3cec26b0c7f69033d57';
 var beheerActief=false;
 
 function toggleBeheer(){
@@ -550,15 +655,18 @@ function toggleBeheer(){
   if(!open){document.getElementById('beheer-code').value='';document.getElementById('beheer-err').style.display='none';}
 }
 
-function checkBeheer(){
+async function checkBeheer(){
   var code=document.getElementById('beheer-code').value.trim().toLowerCase();
-  if(code===BEHEER_CODE){
+  var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(code));
+  var hash=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+  if(hash===BEHEER_HASH){
     beheerActief=true;
     document.getElementById('beheer-login').style.display='none';
     document.getElementById('beheer-panel').style.display='block';
     document.getElementById('beheer-toggle').style.display='none';
     renderBeheerKnoppen(true);
     laadKlascodes();
+    laadFeedback();
   }else{
     document.getElementById('beheer-err').style.display='block';
   }
@@ -669,9 +777,11 @@ function togglePubBeheer(){
   document.getElementById('pub-beheer-err').style.display='none';
 }
 
-function checkPubBeheer(){
+async function checkPubBeheer(){
   var code=document.getElementById('pub-beheer-code').value.trim().toLowerCase();
-  if(code===BEHEER_CODE){
+  var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(code));
+  var hash=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+  if(hash===BEHEER_HASH){
     pubBeheerActief=true;
     document.getElementById('pub-beheer-login').style.display='none';
     document.getElementById('pub-beheer-panel').style.display='block';
@@ -1025,6 +1135,18 @@ async function directDelen(){
     url:bronUrl||null
   };
 
+  // Check for duplicates in public library
+  if(!alleenKlas){
+    try{
+      var bestaand=await sbFetch('gedeelde_bronnen?klascode=eq.PUBLIEK&bronnenlijst=ilike.'+encodeURIComponent('%'+bl.slice(0,40)+'%')+'&limit=1','GET');
+      if(bestaand.length){
+        if(!confirm('Er staat mogelijk al een vergelijkbare bron in de publieke bibliotheek. Wil je hem toch toevoegen?')){
+          return;
+        }
+      }
+    }catch(e){}
+  }
+
   try{
     var taken=[];
     // Publiek delen tenzij alleen-klas is aangevinkt
@@ -1137,6 +1259,76 @@ function renderOpg(){
   });
 }
 
+function sluitAbout(e){
+  if(!e||e.target===document.getElementById('about-overlay'))
+    document.getElementById('about-overlay').classList.remove('open');
+}
+
+function sluitFeedback(e){
+  if(!e||e.target===document.getElementById('feedback-overlay'))
+    document.getElementById('feedback-overlay').classList.remove('open');
+}
+
+async function stuurFeedback(){
+  var naam=document.getElementById('fb-naam').value.trim();
+  var email=document.getElementById('fb-email').value.trim();
+  var bericht=document.getElementById('fb-bericht').value.trim();
+  var mel=document.getElementById('fb-melding');
+  if(!bericht){
+    mel.style.cssText='background:#fff1f1;color:#991b1b;border:1px solid #fecaca;display:block';
+    mel.textContent='Vul een bericht in.';return;
+  }
+  try{
+    await sbFetch('feedback','POST',{naam:naam||null,email:email||null,bericht:bericht});
+    mel.style.cssText='background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;display:block';
+    mel.textContent='Bedankt voor je feedback!';
+    document.getElementById('fb-naam').value='';
+    document.getElementById('fb-email').value='';
+    document.getElementById('fb-bericht').value='';
+    setTimeout(function(){
+      document.getElementById('feedback-overlay').classList.remove('open');
+      mel.style.display='none';
+    },2500);
+  }catch(e){
+    mel.style.cssText='background:#fff1f1;color:#991b1b;border:1px solid #fecaca;display:block';
+    mel.textContent='Kon feedback niet versturen. Probeer opnieuw.';
+  }
+}
+
+async function laadFeedback(){
+  var lijst=document.getElementById('feedback-lijst');
+  if(!lijst)return;
+  lijst.innerHTML='<div style="font-size:.8rem;color:var(--text3)">Laden...</div>';
+  try{
+    var rows=await sbFetch('feedback?order=aangemaakt_op.desc','GET');
+    if(!rows.length){lijst.innerHTML='<div style="font-size:.8rem;color:var(--text3)">Geen feedback ontvangen.</div>';return;}
+    lijst.innerHTML='';
+    rows.forEach(function(r){
+      var d=document.createElement('div');
+      d.style.cssText='background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);padding:.75rem 1rem;margin-bottom:.5rem;position:relative';
+      var datum=new Date(r.aangemaakt_op).toLocaleDateString('nl-NL')+' '+new Date(r.aangemaakt_op).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});
+      var meta=(r.naam||'Anoniem')+(r.email?' &middot; <a href="mailto:'+r.email+'" style="color:var(--navy)">'+r.email+'</a>':'')+' &middot; '+datum;
+      var delbtn=document.createElement('button');
+      delbtn.textContent='Verwijder';
+      delbtn.style.cssText='position:absolute;top:.5rem;right:.5rem;font-size:.72rem;color:var(--text3);background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:.2rem .45rem';
+      (function(rid){delbtn.onclick=function(){verwijderFeedback(rid,this);};})(r.id);
+      d.innerHTML='<div style="font-size:.7rem;color:var(--text3);margin-bottom:.4rem">'+meta+'</div>'
+        +'<div style="font-size:.85rem;color:var(--text);line-height:1.6">'+r.bericht+'</div>';
+      d.appendChild(delbtn);
+      lijst.appendChild(d);
+    });
+  }catch(e){
+    lijst.innerHTML='<div style="font-size:.8rem;color:#991b1b">Kon feedback niet laden.</div>';
+  }
+}
+
+async function verwijderFeedback(id,btn){
+  try{
+    await sbFetch('feedback?id=eq.'+id,'DELETE');
+    btn.closest('div[style]').remove();
+  }catch(e){alert('Verwijderen mislukt.');}
+}
+
 function sluitHelp(e){
   if(!e||e.target===document.getElementById('help-overlay'))
     document.getElementById('help-overlay').classList.remove('open');
@@ -1173,8 +1365,13 @@ function exportTxt(){var r=opg.filter(function(c){return !c.geenBl}).map(functio
 var lbls={aitool:'AI-tool (Generatieve AI)',boek:'Boek',hoofdstuk:'Hoofdstuk uit boek',tijdschrift:'Tijdschriftartikel',krant:'Krantenartikel',website:'Webpagina',rapport:'Rapport / jaarverslag',proefschrift:'Proefschrift / scriptie',youtube:'YouTube / video',naslagwerk:'Naslagwerk / encyclopedie',social:'Social media',podcast:'Podcast',film:'Film / tv-serie',muziek:'Muziek / album',congres:'Congres / presentatie',wetgeving:'Wet / jurisprudentie',dataset:'Dataset',software:'Software / app',afbeelding:'Afbeelding / figuur',leeromgeving:'Digitale leeromgeving',perscomm:'Persoonlijke communicatie'};
 
 function checkDruk(el){var v=el.value.trim(),msg=el.parentNode.querySelector("#druk-err");if(!msg)return;msg.style.display=/^\d+$/.test(v)?"block":"none"}
-function naarScherm(n){document.querySelectorAll('.screen').forEach(function(s,i){s.classList.toggle('active',i+1===n)});window.scrollTo({top:0,behavior:'smooth'});if(n===4)renderOpg();if(n===6)setTimeout(function(){laadPubliekeLibriotheek();},50);}
-function kies(t){ht=t;document.getElementById('s2-title').textContent=lbls[t]||t;renderForm(t);naarScherm(2)}
+function naarScherm(n){
+  document.querySelectorAll('.screen').forEach(function(s,i){s.classList.toggle('active',i+1===n)});
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===5)renderOpg();
+  if(n===7)setTimeout(function(){laadPubliekeLibriotheek();},50);
+}
+function kies(t){ht=t;document.getElementById('s2-title').textContent=lbls[t]||t;renderForm(t);naarScherm(3)}
 function toggleMore(){var el=document.getElementById('more-extra'),btn=document.getElementById('more-btn'),open=el.style.display==='none';el.style.display=open?'block':'none';btn.textContent=open?'minder ▴':'meer brontypen ▾'}
 function toggleOnline(cb){var f=document.getElementById('online-fields');if(f)f.classList.toggle('open',cb.checked)}
 
@@ -1250,7 +1447,7 @@ leeromgeving:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),tp=g('f-type'),
 perscomm:function(){var nm=g('f-naam'),dt=g('f-datum');if(!nm)return null;return{bl:'Persoonlijke communicatie wordt niet opgenomen in de bronnenlijst.',lp:nm+' (persoonlijke communicatie, '+(dt||'datum')+')',hk:'('+nm+', persoonlijke communicatie, '+(dt||'datum')+')',note:'Persoonlijke communicatie staat niet in de bronnenlijst &mdash; alleen als verwijzing in de tekst.',geenBl:true}}
 };
 
-function genereer(){var err=document.getElementById('form-err');err.style.display='none';if(!gens[ht])return;var r=gens[ht]();if(!r){err.textContent='Vul minimaal de vereiste velden in.';err.style.display='block';return}lastR=r;document.getElementById('c-bl').innerHTML=r.bl;document.getElementById('c-lp').innerHTML=r.lp;document.getElementById('c-hk').innerHTML=r.hk;var note=document.getElementById('c-bl-note');if(r.note){note.innerHTML=r.note;note.style.display='block'}else{note.style.display='none'}if(r.geenBl){document.getElementById('c-bl').style.cssText='color:#9a9590;font-style:italic'}else{document.getElementById('c-bl').style.cssText=''}naarScherm(3);swTab(0);}
+function genereer(){var err=document.getElementById('form-err');err.style.display='none';if(!gens[ht])return;var r=gens[ht]();if(!r){err.textContent='Vul minimaal de vereiste velden in.';err.style.display='block';return}lastR=r;document.getElementById('c-bl').innerHTML=r.bl;document.getElementById('c-lp').innerHTML=r.lp;document.getElementById('c-hk').innerHTML=r.hk;var note=document.getElementById('c-bl-note');if(r.note){note.innerHTML=r.note;note.style.display='block'}else{note.style.display='none'}if(r.geenBl){document.getElementById('c-bl').style.cssText='color:#9a9590;font-style:italic'}else{document.getElementById('c-bl').style.cssText=''}naarScherm(4);swTab(0);}
 function swTab(i){
   document.querySelectorAll('#s3 .res-tab').forEach(function(t,j){t.classList.toggle('active',i===j)});
   document.getElementById('rp0').style.display=i===0?'block':'none';
