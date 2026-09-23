@@ -705,7 +705,6 @@ h1,h2,.s2-title{font-optical-sizing:auto}
 
 <script>
 var ht='',opg=[],lastR=null;
-var BEHEER_HASH='b756944e92486f5d046c10aae77a25042d9fd6278ec7d9e6f7b719e438c7668f';
 var beheerActief=false;
 var beheerCode='';
 
@@ -727,9 +726,9 @@ function sluitBeheerOverlay(e){
 }
 async function bhLogin(){
   var code=document.getElementById('bh-code').value.trim().toLowerCase();
-  var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(code));
-  var hash=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
-  if(hash!==BEHEER_HASH){document.getElementById('bh-err').style.display='block';return;}
+  // De database controleert de code; er staat geen hash meer in de broncode
+  try{await sbFetch('rpc/beheer_get_stats','POST',{p_code:code});}
+  catch(e){document.getElementById('bh-err').style.display='block';return;}
   beheerActief=true;beheerCode=code;
   document.getElementById('bh-login').style.display='none';
   document.getElementById('bh-dash').style.display='block';
