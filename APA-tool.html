@@ -115,6 +115,45 @@ h1,h2,.s2-title{font-optical-sizing:auto}
 .src-card:hover{box-shadow:0 8px 22px rgba(36,32,33,.13)}
 *:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* ── Gebruiksvriendelijkheid ─────────────────────────────── */
+:root{--text3:#716b64}
+.type-zoek{margin:-.75rem 0 1.25rem}
+.type-zoek input{width:100%;padding:.7rem 1.1rem;border:1px solid var(--border2);border-radius:99px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);background:var(--surface)}
+.type-zoek input:focus{outline:none;border-color:var(--gold);box-shadow:var(--ring)}
+.type-leeg{font-size:.84rem;color:var(--text2);line-height:1.6;margin-bottom:1rem}
+.link-knop{background:none;border:none;padding:0;font:inherit;color:var(--gold2);text-decoration:underline;cursor:pointer}
+.src-card[hidden],.src-group[hidden]{display:none}
+.live-vb{position:sticky;bottom:.75rem;z-index:5;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:var(--r);padding:.8rem 1.1rem;margin:.25rem 0 .75rem;box-shadow:0 6px 24px rgba(36,32,33,.12);max-height:40vh;overflow:auto}
+.live-vb-kop{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.35rem;display:flex;justify-content:space-between;gap:.5rem}
+.live-vb-status{text-transform:none;letter-spacing:0;font-weight:500}
+.live-vb .cite-text{font-size:.92rem;line-height:1.75}
+.live-vb .leeg{font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--text3);text-indent:0;padding-left:0}
+.veld-melding{font-size:.7rem;line-height:1.4;color:#92400e;margin-top:.1rem}
+.veld-melding.ok{color:#166534}
+.veld-waarsch{border-color:#d97706!important}
+.mini-knop{align-self:flex-start;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--bg);border:1px solid var(--border2);border-radius:99px;padding:.25rem .7rem;cursor:pointer}
+.mini-knop:hover{border-color:var(--gold);color:var(--navy)}
+.doi-snel{display:grid;grid-template-columns:1fr auto;gap:.5rem;margin-top:.5rem}
+.doi-snel input{padding:.52rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.86rem;width:100%}
+.doi-snel button{padding:.5rem 1rem;background:var(--navy);color:#fff;border:none;border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.doi-snel button:disabled{opacity:.6;cursor:wait}
+.doi-melding{font-size:.76rem;line-height:1.5;margin-top:.5rem;color:var(--text2)}
+.optioneel-dicht .optioneel-veld{display:none}
+.meer-knop{grid-column:1/-1;justify-self:start;background:none;border:none;border-bottom:1px dashed var(--border2);padding:.2rem 0;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text2);cursor:pointer}
+.meer-knop:hover{color:var(--navy);border-bottom-color:var(--gold)}
+.selectie-balk{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;font-size:.8rem;color:var(--text2)}
+.sel-alles{display:flex;align-items:center;gap:.4rem;cursor:pointer}
+.sel-alles input,.sel-bron input{width:16px;height:16px;accent-color:var(--gold2);cursor:pointer}
+.sel-bron{display:flex;align-items:center;gap:.45rem;font-size:.75rem;font-weight:500;color:var(--text3);cursor:pointer}
+.sel-telling{font-size:.75rem;color:var(--text3)}
+.sel-kopieer{width:100%;padding:.8rem}
+.sel-uitleg{font-size:.72rem;color:var(--text3);margin-top:.5rem;line-height:1.5}
+.result-card.gekozen{border-color:var(--gold);box-shadow:0 0 0 2px rgba(169,130,76,.25)}
+#pub-spinner{padding:.25rem 0}
+.skelet{border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:.75rem;background:var(--surface)}
+.skelet i{display:block;height:.7rem;border-radius:4px;margin:.45rem 0;background:linear-gradient(90deg,#eee9e1 25%,#f7f3ec 50%,#eee9e1 75%);background-size:200% 100%;animation:glans 1.2s ease-in-out infinite}
+.skelet i.kort{width:55%}
+@keyframes glans{from{background-position:200% 0}to{background-position:-200% 0}}
 </style>
 </head>
 <body>
@@ -185,13 +224,28 @@ h1,h2,.s2-title{font-optical-sizing:auto}
     </div>
   </div>
 
+  <div class="type-zoek">
+    <input type="search" id="type-zoek" placeholder="&#128269; Zoek brontype&hellip; (bijv. artikel, video, ChatGPT, Brightspace)" aria-label="Zoek een brontype" autocomplete="off">
+  </div>
+  <div id="type-leeg" class="type-leeg" hidden>Geen brontype gevonden. Kies het brontype dat er het meest op lijkt, of gebruik <button type="button" class="link-knop" onclick="kies('website')">Webpagina</button> voor iets dat je online vond.</div>
+
+  <div class="src-group" id="groep-populair">
+    <div class="src-group-label">Meest gebruikt</div>
+    <div class="src-grid">
+      <div class="src-card" onclick="kies('boek')"><span class="si">📚</span><span class="sl">Boek</span></div>
+      <div class="src-card" onclick="kies('website')"><span class="si">🌐</span><span class="sl">Webpagina</span></div>
+      <div class="src-card" onclick="kies('tijdschrift')"><span class="si">📰</span><span class="sl">Tijdschrift&shy;artikel</span></div>
+      <div class="src-card" onclick="kies('aitool')"><span class="si">🤖</span><span class="sl">AI-tool</span></div>
+    </div>
+  </div>
+
   <div class="src-group">
     <div class="src-group-label">Boeken &amp; artikelen</div>
     <div class="src-grid">
       <div class="src-card" onclick="kies('boek')"><span class="si">📚</span><span class="sl">Boek</span></div>
       <div class="src-card" onclick="kies('hoofdstuk')"><span class="si">📖</span><span class="sl">Hoofdstuk uit boek</span></div>
       <div class="src-card" onclick="kies('tijdschrift')"><span class="si">📰</span><span class="sl">Tijdschrift&shy;artikel</span></div>
-      <div class="src-card" onclick="kies('krant')"><span class="si">🗞️</span><span class="sl">Kranteartikel</span></div>
+      <div class="src-card" onclick="kies('krant')"><span class="si">🗞️</span><span class="sl">Krantenartikel</span></div>
       <div class="src-card" onclick="kies('naslagwerk')"><span class="si">📒</span><span class="sl">Naslagwerk</span></div>
     </div>
   </div>
@@ -254,7 +308,11 @@ h1,h2,.s2-title{font-optical-sizing:auto}
   </div>
   <div id="uitleg-paneel" style="display:none;margin-bottom:.75rem"></div>
   <div id="form-content"></div>
-  <button class="gen-btn" onclick="genereer()">Maak APA-vermelding</button>
+  <div class="live-vb" id="live-vb" aria-live="polite">
+    <div class="live-vb-kop">Zo komt het in je bronnenlijst <span class="live-vb-status" id="live-vb-status"></span></div>
+    <div class="cite-text bl" id="live-vb-tekst"></div>
+  </div>
+  <button class="gen-btn" onclick="genereer()" title="Sneltoets: Ctrl+Enter">Klaar &mdash; kopiëren, opslaan of delen &rarr;</button>
   <div class="form-err" id="form-err"></div>
   <div class="copyright">&copy; Patrick Bres</div>
 </div>
@@ -338,13 +396,19 @@ h1,h2,.s2-title{font-optical-sizing:auto}
       <button class="act-btn" onclick="naarScherm(7)" style="width:100%">Naar de publieke bibliotheek &rarr;</button>
     </div>
   </div>
+  <div id="selectie-balk" class="selectie-balk" style="display:none">
+    <label class="sel-alles"><input type="checkbox" id="sel-alles" onchange="selecteerAlles(this.checked)"> Alles selecteren</label>
+    <span id="sel-telling" class="sel-telling"></span>
+  </div>
   <div id="saved-cards"></div>
 
   <div id="saved-actions" style="display:none;margin-top:.25rem">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-      <button class="copy-all-btn" style="margin:0" onclick="kopieerAlles()">Kopieer bronnenlijst</button>
+    <button class="act-btn primary sel-kopieer" id="kopieer-sel" onclick="kopieerSelectie(this,false)">Kopieer bronnenlijst voor Word</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem">
+      <button class="copy-all-btn" style="margin:0" id="kopieer-sel-plat" onclick="kopieerSelectie(this,true)">Als platte tekst</button>
       <button class="copy-all-btn" style="margin:0" onclick="exportTxt()">Download .txt</button>
     </div>
+    <p class="sel-uitleg">Vink bronnen aan om alleen een selectie te kopiëren. De tool zet ze automatisch op alfabetische volgorde.</p>
     <div style="margin-top:.75rem;padding:.6rem .8rem;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--rsm);font-size:.71rem;color:#78350f;line-height:1.5">
       <strong>Lokale opslag:</strong> bronnen blijven bewaard in deze browser op dit apparaat. In een andere browser of na het wissen van de cache zijn ze niet beschikbaar.
     </div>
@@ -480,7 +544,7 @@ h1,h2,.s2-title{font-optical-sizing:auto}
           </select>
         </div>
       </div>
-      <div id="pub-spinner" style="text-align:center;padding:1rem;font-size:.82rem;color:var(--text3)">Laden…</div>
+      <div id="pub-spinner" aria-label="Bibliotheek wordt geladen" role="status"><div class="skelet"><i></i><i></i><i class="kort"></i></div><div class="skelet"><i></i><i></i><i class="kort"></i></div><div class="skelet"><i></i><i></i><i class="kort"></i></div></div>
       <div id="pub-list"></div>
       <button id="pub-meer" onclick="zoekPubliek(false)" class="copy-all-btn" style="display:none;margin-top:.25rem">Meer laden</button>
       <div id="pub-leeg" style="display:none;padding:.4rem 0">
@@ -1682,7 +1746,7 @@ lastR=r;document.getElementById('c-bl').innerHTML=r.bl;document.getElementById('
   if(deelCard)deelCard.style.display=ht==='perscomm'?'none':'block';
 }
 function swTab(i){
-  document.querySelectorAll('#s3 .res-tab').forEach(function(t,j){t.classList.toggle('active',i===j)});
+  document.querySelectorAll('#s4 .res-tab').forEach(function(t,j){t.classList.toggle('active',i===j)});
   document.getElementById('rp0').style.display=i===0?'block':'none';
   document.getElementById('rp1').style.display=i===1?'block':'none';
   document.getElementById('rp2').style.display=i===2?'block':'none';
@@ -1758,6 +1822,274 @@ function kopieerWord(id,btn){
 function verw(i){opg.splice(i,1);renderOpg();opslaanLokaal()}
 function kopieerAlles(){var r=opg.filter(function(c){return !c.geenBl}).map(function(c){var t=document.createElement('div');t.innerHTML=c.bl;return t.innerText||t.textContent}).sort(apaVergelijk).join('\n\n');navigator.clipboard.writeText(r);var btn=event.target;btn.textContent='Gekopieerd \u2713';setTimeout(function(){btn.textContent='Kopieer volledige bronnenlijst'},2000)}
 laadLokaal();
+</script>
+
+<script>
+/* ══ Gebruiksvriendelijkheid: live voorbeeld, slimme velden, DOI, selectie, toegankelijkheid ══ */
+var MAANDEN=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+var TUSSENVOEGSELS=['van der','van den','van de','van het',"van 't",'in het',"in 't",'in de','op de','op het','uit de','uit het','van','de','den','der','het',"'t",'ten','ter','te','la','le','du','da','di','von','zu'];
+var DOI_TYPES=['tijdschrift','boek','hoofdstuk','rapport','dataset','proefschrift','congres'];
+var CROSSREF_TYPE={'journal-article':'tijdschrift','book':'boek','monograph':'boek','edited-book':'boek','book-chapter':'hoofdstuk','report':'rapport','dataset':'dataset','dissertation':'proefschrift','proceedings-article':'congres'};
+var optioneelOpen=false;
+
+// "van den Berg" → tussenvoegsel "van den" + achternaam "Berg"
+function splitsTussenvoegsel(naam){
+  var laag=naam.toLowerCase();
+  for(var i=0;i<TUSSENVOEGSELS.length;i++){var tv=TUSSENVOEGSELS[i];if(laag.indexOf(tv+' ')===0&&naam.length>tv.length+1)return{tv:naam.slice(0,tv.length).toLowerCase(),ach:naam.slice(tv.length+1).trim()};}
+  return null;
+}
+// "pj" / "P.J." / "Marie-José Anna" → "P. J." / "M.-J. A."
+function netteVoorletters(v){
+  v=(v||'').trim();if(!v)return '';
+  if(/^[A-Za-zÀ-ÿ]{1,4}$/.test(v)&&v===v.toUpperCase()||/^[a-z]{1,3}$/.test(v))return v.toUpperCase().split('').map(function(c){return c+'.'}).join(' ');
+  return v.replace(/\./g,' ').trim().split(/\s+/).map(function(w){return w.split('-').map(function(p){return p?p[0].toUpperCase()+'.':''}).join('-')}).join(' ');
+}
+function vandaag(){var d=new Date();return{dag:String(d.getDate()),maand:MAANDEN[d.getMonth()]+' '+d.getFullYear()};}
+function zetVeld(id,waarde){var el=document.getElementById(id);if(!el||waarde==null||waarde==='')return false;el.value=waarde;el.classList.remove('veld-fout');return true;}
+
+/* ── Formulier verrijken na renderForm ── */
+var _renderForm=renderForm;
+renderForm=function(t){_renderForm(t);verrijkFormulier(t);};
+function verrijkFormulier(t){
+  var fc=document.getElementById('form-content');
+  // Labels koppelen aan velden; velden zonder label krijgen een aria-label
+  fc.querySelectorAll('.field').forEach(function(f){var lab=f.querySelector('label'),c=f.querySelector('input,select,textarea');if(lab&&c&&c.id&&!lab.htmlFor)lab.htmlFor=c.id;});
+  fc.querySelectorAll('input:not([id]),input[placeholder]').forEach(function(i){if(!i.getAttribute('aria-label')&&!(i.id&&fc.querySelector('label[for="'+i.id+'"]')))i.setAttribute('aria-label',i.placeholder||'Invoerveld');});
+  // "Vandaag"-knop bij de raadpleegdatum
+  var rd=document.getElementById('f-raaddatum');
+  if(rd){var knop=document.createElement('button');knop.type='button';knop.className='mini-knop';knop.textContent='📅 Vandaag geraadpleegd';
+    knop.onclick=function(){var v=vandaag();zetVeld('f-raaddag',v.dag);zetVeld('f-raaddatum',v.maand);updateVoorbeeld();};
+    rd.closest('div[style*="grid"]').insertAdjacentElement('afterend',knop);}
+  // DOI-snelinvoer bovenaan
+  if(DOI_TYPES.indexOf(t)>=0){
+    var k=document.createElement('div');k.className='form-card doi-kaart';
+    k.innerHTML='<div class="fsec">Heb je een DOI? <span class="tag-opt">snelste manier</span></div>'
+      +'<p style="font-size:.76rem;color:var(--text3);line-height:1.5">Plak de DOI en de gegevens worden automatisch ingevuld via Crossref. Controleer ze daarna altijd.</p>'
+      +'<div class="doi-snel"><input type="text" id="doi-snel" placeholder="10.1037/0003-066X.59.1.29 of https://doi.org/…" aria-label="DOI om gegevens op te halen"><button type="button" id="doi-snel-knop">Ophalen</button></div>'
+      +'<div class="doi-melding" id="doi-melding" role="status"></div>';
+    fc.insertBefore(k,fc.firstChild);
+    document.getElementById('doi-snel-knop').onclick=haalDoiOp;
+    document.getElementById('doi-snel').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();haalDoiOp();}};
+  }
+  // Optionele velden inklappen
+  var ver=verplicht[t]||[];
+  fc.querySelectorAll('.form-card').forEach(function(card){
+    var fg=card.querySelector('.fg');if(!fg)return;
+    var opt=[];
+    fg.querySelectorAll(':scope > .field').forEach(function(f){
+      var c=f.querySelector('input,select,textarea');
+      if(f.querySelector('label .tag-opt')&&!(c&&ver.indexOf(c.id)>=0)){f.classList.add('optioneel-veld');var lab=f.querySelector('label');opt.push(lab.childNodes[0].textContent.trim());}
+    });
+    if(!opt.length)return;
+    var knop=document.createElement('button');knop.type='button';knop.className='meer-knop';
+    function zet(open){card.classList.toggle('optioneel-dicht',!open);knop.setAttribute('aria-expanded',open);knop.textContent=open?'− Minder gegevens':'+ Meer gegevens: '+opt.join(', ');}
+    knop.onclick=function(){var open=card.classList.contains('optioneel-dicht');optioneelOpen=open;zet(open);};
+    var eersteNiet=fg.querySelector(':scope > .ff:not(.field)');
+    if(eersteNiet)fg.insertBefore(knop,eersteNiet);else fg.appendChild(knop);
+    zet(optioneelOpen);
+  });
+  var vb=document.getElementById('live-vb');if(vb)vb.style.display=t==='perscomm'?'none':'';
+  updateVoorbeeld();
+}
+// Als een verborgen optioneel veld een waarde krijgt (bijv. via DOI), klap het open
+function toonGevuldeOptioneel(){
+  document.querySelectorAll('#form-content .optioneel-dicht').forEach(function(card){
+    var gevuld=[].some.call(card.querySelectorAll('.optioneel-veld input,.optioneel-veld select'),function(i){return i.value.trim()&&i.tagName!=='SELECT';});
+    if(gevuld){var k=card.querySelector('.meer-knop');if(k)k.click();}
+  });
+}
+
+/* ── Live voorbeeld ── */
+var vbTimer=null;
+function updateVoorbeeld(){
+  clearTimeout(vbTimer);
+  vbTimer=setTimeout(function(){
+    var tekst=document.getElementById('live-vb-tekst'),st=document.getElementById('live-vb-status');
+    if(!tekst||!gens[ht])return;
+    var r=null;try{r=gens[ht]();}catch(e){}
+    var mist=(verplicht[ht]||[]).filter(function(id){var el=document.getElementById(id);return el&&!el.value.trim();}).map(function(id){return veldLabel(document.getElementById(id));});
+    if(r&&!r.geenBl){tekst.className='cite-text bl';tekst.innerHTML=r.bl;}
+    else if(r&&r.geenBl){tekst.className='cite-text leeg';tekst.textContent='Persoonlijke communicatie komt niet in de bronnenlijst.';}
+    else{tekst.className='cite-text leeg';tekst.textContent='Begin met invullen; je vermelding verschijnt hier terwijl je typt.';}
+    st.textContent=mist.length?'nog nodig: '+mist.join(', '):'✓ compleet';
+    st.style.color=mist.length?'var(--text3)':'#166534';
+  },120);
+}
+['input','change'].forEach(function(ev){document.getElementById('form-content').addEventListener(ev,updateVoorbeeld);});
+document.getElementById('form-content').addEventListener('click',function(e){if(e.target.closest('.add-aut,.rm-btn'))setTimeout(updateVoorbeeld,0);});
+
+/* ── Slimme velden: controle bij verlaten van een veld ── */
+function meld(el,tekst,ok){
+  var f=el.closest('.field')||el.parentNode;var m=f.querySelector(':scope > .veld-melding');
+  if(!tekst){if(m)m.remove();el.classList.remove('veld-waarsch');return;}
+  if(!m){m=document.createElement('div');m.className='veld-melding';m.setAttribute('role','status');f.appendChild(m);}
+  m.textContent=tekst;m.classList.toggle('ok',!!ok);el.classList.toggle('veld-waarsch',!ok);
+}
+document.getElementById('form-content').addEventListener('focusout',function(e){
+  var el=e.target;if(!el.matches('input'))return;var v=el.value.trim();
+  if(el.classList.contains('a-ach')&&v){
+    var rij=el.closest('.arow'),tss=rij&&rij.querySelector('.a-tss'),sp=splitsTussenvoegsel(v);
+    if(sp&&tss&&!tss.value.trim()){el.value=sp.ach.charAt(0).toUpperCase()+sp.ach.slice(1);tss.value=sp.tv;updateVoorbeeld();}
+    return;
+  }
+  if(el.classList.contains('a-vrl')&&v){var n=netteVoorletters(v);if(n!==v){el.value=n;updateVoorbeeld();}return;}
+  if(['f-jaar','f-origjaar','f-copyjaar'].indexOf(el.id)>=0){
+    meld(el,!v||/^(\d{4}[a-z]?|z\.\s?d\.?|in druk|\d{4}-(\d{4}|heden))$/i.test(v)?'':'Vul een jaartal van 4 cijfers in, of z.d. als er geen datum is.');
+    if(/^z\.?\s?d\.?$/i.test(v))el.value='z.d.';
+    return;
+  }
+  if(el.id==='f-url'){
+    if(v&&/^www\./i.test(v)){el.value='https://'+v;v=el.value;updateVoorbeeld();}
+    meld(el,!v||/^https?:\/\/\S+\.\S+/i.test(v)?'':'Een URL begint met https:// of http:// (bijv. https://www.rivm.nl).');
+    if(v&&/^https?:\/\//i.test(v)&&!document.getElementById('f-raaddatum').value.trim()&&ht!=='aitool'){
+      var d=vandaag();zetVeld('f-raaddag',d.dag);zetVeld('f-raaddatum',d.maand);
+      meld(document.getElementById('f-raaddatum'),'Datum van vandaag ingevuld — pas aan als je de pagina eerder raadpleegde.',true);updateVoorbeeld();
+    }
+    return;
+  }
+  if(el.id==='f-doi'){
+    var d2=v.replace(/^(https?:\/\/(dx\.)?doi\.org\/|doi:\s*)/i,'');
+    meld(el,!v||/^10\.\d{4,9}\/\S+$/.test(d2)?'':'Een DOI begint met 10. gevolgd door een schuine streep, bijv. 10.1037/0003-066X.59.1.29');
+  }
+});
+
+/* ── DOI ophalen via Crossref ── */
+function kaleTekst(s){var d=document.createElement('div');d.innerHTML=s||'';return (d.textContent||'').replace(/\s+/g,' ').trim();}
+function vulPersonen(px,lijst){
+  var c=document.getElementById(px+'-rows');if(!c||!lijst||!lijst.length)return 0;
+  c.innerHTML='';
+  lijst.forEach(function(p){
+    if(p.name&&!p.family){addAut(px,p.name,'','');return;}
+    var fam=p.family||'',sp=splitsTussenvoegsel(fam),tv=sp?sp.tv:'',ach=sp?sp.ach:fam;
+    addAut(px,ach.charAt(0).toUpperCase()+ach.slice(1),netteVoorletters(p.given||''),tv);
+  });
+  return lijst.length;
+}
+async function haalDoiOp(){
+  var inp=document.getElementById('doi-snel'),knop=document.getElementById('doi-snel-knop'),mel=document.getElementById('doi-melding');
+  var d=(inp.value||'').trim().replace(/^(https?:\/\/(dx\.)?doi\.org\/|doi:\s*)/i,'');
+  if(!/^10\.\d{4,9}\/\S+$/.test(d)){mel.style.color='#92400e';mel.textContent='Dit lijkt geen DOI. Een DOI begint met 10. gevolgd door een schuine streep, bijv. 10.1037/0003-066X.59.1.29';return;}
+  knop.disabled=true;knop.textContent='Bezig…';mel.style.color='var(--text2)';mel.textContent='Gegevens ophalen bij Crossref…';
+  try{
+    var r=await fetch('https://api.crossref.org/works/'+d.split('/').map(encodeURIComponent).join('/'));
+    if(r.status===404)throw new Error('niet gevonden');
+    if(!r.ok)throw new Error('status '+r.status);
+    var m=(await r.json()).message;
+    var soort=CROSSREF_TYPE[m.type];
+    if(soort&&soort!==ht&&DOI_TYPES.indexOf(soort)>=0){
+      mel.style.color='#92400e';
+      mel.innerHTML='Deze DOI hoort bij een <strong>'+esc(lbls[soort]||soort)+'</strong>, niet bij een '+esc((lbls[ht]||ht).toLowerCase())+'. <button type="button" class="link-knop" id="doi-wissel">Wissel van brontype en vul in</button>';
+      document.getElementById('doi-wissel').onclick=function(){kies(soort);document.getElementById('doi-snel').value=d;haalDoiOp();};
+      return;
+    }
+    var n=0,datum=(m.issued||m['published-print']||m['published-online']||m.created||{})['date-parts'];
+    if(datum&&datum[0]&&datum[0][0]&&zetVeld('f-jaar',String(datum[0][0])))n++;
+    n+=vulPersonen('auth',m.author);
+    if(ht==='hoofdstuk')n+=vulPersonen('red',m.editor);
+    var titel=kaleTekst((m.title||[])[0]),sub=kaleTekst((m.subtitle||[])[0]);
+    if(titel){if(sub&&!document.getElementById('f-ondertitel'))titel+=': '+sub;if(zetVeld(ht==='dataset'?'f-naam':'f-titel',titel))n++;}
+    if(sub&&zetVeld('f-ondertitel',sub))n++;
+    var bak=kaleTekst((m['container-title']||[])[0]);
+    if(bak&&zetVeld({tijdschrift:'f-tijdschrift',hoofdstuk:'f-boek',congres:'f-congres'}[ht],bak))n++;
+    if(zetVeld('f-jaargang',m.volume))n++;
+    if(zetVeld('f-nummer',m.issue))n++;
+    var pag=(m.page||'').split(/[-–]/);
+    if(zetVeld('f-pvan',pag[0]))n++;
+    if(zetVeld('f-ptot',pag[1]))n++;
+    if(ht!=='tijdschrift'&&zetVeld('f-uitgever',uitg(m.publisher)))n++;
+    if(ht==='proefschrift'&&m.institution&&m.institution[0]&&zetVeld('f-instelling',m.institution[0].name))n++;
+    var cb=document.getElementById('online-cb');if(cb&&!cb.checked){cb.checked=true;toggleOnline(cb);}
+    zetVeld('f-doi','https://doi.org/'+d);
+    toonGevuldeOptioneel();updateVoorbeeld();
+    var hoofdletters=(titel.match(/\b[A-Z][a-z]{3,}/g)||[]).length>=3;
+    mel.style.color='#166534';
+    mel.innerHTML='✓ '+n+' gegevens ingevuld. <strong>Controleer ze</strong> met de bron.'+(hoofdletters?' <span style="color:#92400e">Let op de hoofdletters in de titel: APA wil alleen een hoofdletter aan het begin, na een dubbele punt en bij namen.</span>':'');
+  }catch(e){
+    mel.style.color='#991b1b';
+    mel.textContent=/niet gevonden/.test(e.message)?'Deze DOI is niet gevonden bij Crossref. Controleer de DOI of vul de gegevens zelf in.':'Ophalen lukte niet (geen verbinding?). Vul de gegevens zelf in.';
+  }finally{knop.disabled=false;knop.textContent='Ophalen';}
+}
+
+/* ── Brontype zoeken ── */
+var TYPE_ZOEK={boek:'e-book ebook studieboek leerboek',hoofdstuk:'bundel redacteur',tijdschrift:'artikel journal wetenschappelijk vakblad paper',krant:'nieuws volkskrant nrc trouw telegraaf',naslagwerk:'woordenboek wikipedia encyclopedie van dale lemma',website:'internet site blog nieuwssite online pagina nu.nl nos',youtube:'video vimeo npo start filmpje',social:'instagram tiktok twitter x facebook linkedin post tweet',podcast:'spotify aflevering audio',film:'serie netflix documentaire tv televisie',muziek:'lied song album spotify nummer',rapport:'brochure folder jaarverslag richtlijn persbericht rapportage',proefschrift:'scriptie thesis afstuderen afstudeeropdracht stageverslag dissertatie',congres:'symposium presentatie keynote poster conferentie',dataset:'data cbs gegevens',aitool:'chatgpt claude copilot gemini ai kunstmatige intelligentie generatieve',wetgeving:'wet ecli uitspraak kamerstuk rechtspraak jurisprudentie',software:'app programma applicatie',afbeelding:'figuur tabel foto grafiek kaart plaatje kunstwerk',leeromgeving:'brightspace canvas teams blackboard moodle reader powerpoint studiehandleiding',perscomm:'interview gesprek email e-mail mail les college docent'};
+function kaartType(c){var m=(c.getAttribute('onclick')||'').match(/kies\('(\w+)'\)/);return m?m[1]:'';}
+function filterTypes(){
+  var q=(document.getElementById('type-zoek').value||'').toLowerCase().trim(),woorden=q.split(/\s+/).filter(Boolean),totaal=0;
+  document.getElementById('groep-populair').hidden=!!q;
+  document.querySelectorAll('#s2 .src-group:not(#groep-populair)').forEach(function(g){
+    var zichtbaar=0;
+    g.querySelectorAll('.src-card').forEach(function(c){
+      var t=kaartType(c),hooi=(c.textContent+' '+t+' '+(TYPE_ZOEK[t]||'')).toLowerCase().replace(/­/g,'');
+      var ok=woorden.every(function(w){return hooi.indexOf(w)>=0;});c.hidden=!ok;if(ok)zichtbaar++;
+    });
+    g.hidden=!zichtbaar;totaal+=zichtbaar;
+  });
+  document.getElementById('type-leeg').hidden=totaal>0;
+}
+document.getElementById('type-zoek').addEventListener('input',filterTypes);
+document.getElementById('type-zoek').addEventListener('keydown',function(e){if(e.key==='Enter'){var c=[].find.call(document.querySelectorAll('#s2 .src-group:not([hidden]) .src-card:not([hidden])'),function(){return true;});if(c)c.click();}});
+var _naarScherm=naarScherm;
+naarScherm=function(n){
+  _naarScherm(n);
+  if(n===2){var z=document.getElementById('type-zoek');z.value='';filterTypes();if(window.matchMedia('(pointer:fine)').matches)setTimeout(function(){z.focus();},50);}
+};
+
+/* ── Mijn bronnen: selectie kopiëren (alfabetisch) ── */
+var gekozen=new Set();
+var _renderOpg=renderOpg;
+renderOpg=function(){
+  _renderOpg();
+  gekozen.forEach(function(c){if(opg.indexOf(c)<0)gekozen.delete(c);});
+  var kaarten=document.querySelectorAll('#saved-cards > .result-card');
+  kaarten.forEach(function(kaart,i){
+    var c=opg[i],lbl=kaart.querySelector('span');if(!c||!lbl)return;
+    var l=document.createElement('label');l.className='sel-bron';
+    var cb=document.createElement('input');cb.type='checkbox';cb.checked=gekozen.has(c);cb.disabled=!!c.geenBl;
+    cb.setAttribute('aria-label','Selecteer bron '+(i+1));
+    cb.onchange=function(){if(cb.checked)gekozen.add(c);else gekozen.delete(c);kaart.classList.toggle('gekozen',cb.checked);werkSelectieBij();};
+    l.appendChild(cb);l.appendChild(document.createTextNode('Bron '+(i+1)));
+    lbl.replaceWith(l);kaart.classList.toggle('gekozen',cb.checked);
+  });
+  document.getElementById('selectie-balk').style.display=opg.length?'flex':'none';
+  werkSelectieBij();
+};
+function werkSelectieBij(){
+  var k=gekozen.size,bruikbaar=opg.filter(function(c){return !c.geenBl}).length;
+  document.getElementById('sel-telling').textContent=k?k+' van '+bruikbaar+' geselecteerd':'';
+  var alles=document.getElementById('sel-alles');alles.checked=k>0&&k===bruikbaar;alles.indeterminate=k>0&&k<bruikbaar;
+  document.getElementById('kopieer-sel').textContent=k?'Kopieer '+k+' geselecteerde bron'+(k===1?'':'nen')+' voor Word':'Kopieer hele bronnenlijst voor Word';
+}
+function selecteerAlles(aan){gekozen.clear();if(aan)opg.forEach(function(c){if(!c.geenBl)gekozen.add(c);});renderOpg();}
+function schrijfKlembord(html,plat,klaar){
+  if(window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){
+    navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([plat],{type:'text/plain'})})]).then(klaar).catch(function(){navigator.clipboard.writeText(plat).then(klaar);});
+  }else navigator.clipboard.writeText(plat).then(klaar);
+}
+function kopieerSelectie(btn,plat){
+  var lijst=(gekozen.size?opg.filter(function(c){return gekozen.has(c)}):opg).filter(function(c){return !c.geenBl});
+  if(!lijst.length)return;
+  var items=lijst.map(function(c){return{html:veiligeHtml(c.bl),tekst:kaleTekst(c.bl)};}).sort(function(a,b){return apaVergelijk(a.tekst,b.tekst);});
+  var tekst=items.map(function(i){return i.tekst}).join('\n\n');
+  var html='<!DOCTYPE html><html><head><style>p.apa{margin:0 0 0 36pt;text-indent:-36pt;line-height:200%;font-family:"Times New Roman",serif;font-size:12pt}em{font-style:italic}</style></head><body>'
+    +items.map(function(i){return '<p class=apa>'+i.html+'</p>'}).join('')+'</body></html>';
+  var oud=btn.textContent;
+  var klaar=function(){btn.textContent='Gekopieerd ✓ ('+items.length+', alfabetisch)';btn.classList.add('done');setTimeout(function(){btn.textContent=oud;btn.classList.remove('done');werkSelectieBij();},2200);};
+  if(plat)navigator.clipboard.writeText(tekst).then(klaar);else schrijfKlembord(html,tekst,klaar);
+}
+
+/* ── Toegankelijkheid & toetsenbord ── */
+function maakToegankelijk(){
+  document.querySelectorAll('.src-card').forEach(function(c){c.tabIndex=0;c.setAttribute('role','button');});
+  document.querySelectorAll('.back-btn').forEach(function(b){b.setAttribute('aria-label','Terug');});
+  document.querySelectorAll('button').forEach(function(b){var t=b.textContent.trim();if(t==='!')b.setAttribute('aria-label','Over deze tool');if(t==='?')b.setAttribute('aria-label','Uitleg');if(t==='×')b.setAttribute('aria-label','Sluiten');});
+}
+maakToegankelijk();
+new MutationObserver(function(ms){ms.forEach(function(m){m.addedNodes.forEach(function(n){if(n.nodeType===1&&n.classList&&n.classList.contains('arow')){n.querySelectorAll('input').forEach(function(i){i.setAttribute('aria-label',i.placeholder);});var rb=n.querySelector('.rm-btn');if(rb){rb.type='button';rb.setAttribute('aria-label','Verwijder deze naam');}}});});}).observe(document.body,{childList:true,subtree:true});
+document.addEventListener('keydown',function(e){
+  if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('src-card')){e.preventDefault();e.target.click();return;}
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&document.getElementById('s3').classList.contains('active')){e.preventDefault();genereer();return;}
+  if(e.key==='Escape')document.querySelectorAll('.help-overlay.open,.feedback-overlay.open').forEach(function(o){o.classList.remove('open');});
+});
 </script>
 </body>
 </html>
