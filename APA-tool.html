@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>APA Bronvermelding</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f2eee7'/%3E%3Crect x='5' y='8' width='22' height='4' rx='2' fill='%231f5c4a'/%3E%3Crect x='10' y='14.5' width='17' height='4' rx='2' fill='%23b98a5a'/%3E%3Crect x='10' y='21' width='12' height='4' rx='2' fill='%23b98a5a'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#1f5c4a">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#242021;--navy2:#3a3330;--gold:#a9824c;--gold2:#8f6c3d;--gold-soft:#f3ebdd;--bg:#f7f5f1;--surface:#ffffff;--border:#e2ddd6;--border2:#ccc8c0;--text:#1a1714;--text2:#5a5550;--text3:#9a9590;--r:13px;--rsm:8px;--shadow:0 1px 2px rgba(36,32,33,.04),0 6px 18px rgba(36,32,33,.05);--ring:0 0 0 3px rgba(169,130,76,.22)}
@@ -154,61 +156,125 @@ h1,h2,.s2-title{font-optical-sizing:auto}
 .skelet i{display:block;height:.7rem;border-radius:4px;margin:.45rem 0;background:linear-gradient(90deg,#eee9e1 25%,#f7f3ec 50%,#eee9e1 75%);background-size:200% 100%;animation:glans 1.2s ease-in-out infinite}
 .skelet i.kort{width:55%}
 @keyframes glans{from{background-position:200% 0}to{background-position:-200% 0}}
+
+/* ══ Vormgeving: moderne studiebibliotheek ══════════════════════════════
+   zand #f2eee7 · wit · diepgroen #1f5c4a · hout #b98a5a · antraciet #22262a */
+:root{
+  --zand:#f2eee7;--groen:#1f5c4a;--groen2:#17463a;--groen-zacht:#e3ede9;--hout:#b98a5a;--hout2:#8f6a43;--antr:#22262a;
+  --navy:var(--groen);--navy2:var(--groen2);--gold:var(--hout);--gold2:var(--hout2);--gold-soft:#f1e8da;
+  --bg:var(--zand);--surface:#ffffff;--border:#e4ddd1;--border2:#cfc7ba;--text:var(--antr);--text2:#50555a;--text3:#6b665f;
+  --r:14px;--rsm:9px;--shadow:0 1px 0 rgba(34,38,42,.03),0 8px 24px rgba(34,38,42,.06);--ring:0 0 0 3px rgba(31,92,74,.18);
+  --foto:url('https://images.unsplash.com/photo-1756037020659-6f9d3418f6b6?w=1600&q=70&auto=format');
+}
+body{background:var(--zand);color:var(--antr)}
+/* zachte, vervaagde foto op alle schermen behalve de startpagina */
+body::before{content:'';position:fixed;inset:-40px;z-index:-1;background:linear-gradient(rgba(242,238,231,.86),rgba(242,238,231,.93)),var(--foto) center/cover;filter:blur(14px);pointer-events:none}
+body.op-start::before{display:none}
+body.op-start{padding:0}
+*:focus-visible{outline:2px solid var(--groen)}
+.s2-title,.help-head h2,.saved-section h3{color:var(--antr)}
+.s2-title{font-weight:500;letter-spacing:-.01em}
+.form-card,.result-card{border-color:var(--border);border-radius:var(--r)}
+.fsec,.src-group-label{text-transform:none;letter-spacing:0;font-size:.8rem;font-weight:600;color:var(--text2)}
+.src-card{border-color:transparent;border-radius:12px}
+.src-card:hover{background:var(--groen);border-color:var(--groen);color:#fff}
+.gen-btn{background:var(--groen);color:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(31,92,74,.22)}
+.gen-btn:hover{background:var(--groen2)}
+.copy-btn:hover,.copy-all-btn:hover{background:var(--groen);border-color:var(--groen)}
+.act-btn.primary{background:var(--groen);border-color:var(--groen)}
+.act-btn.primary:hover{background:var(--groen2)}
+.res-tab.active{border-bottom-color:var(--groen)}
+.live-vb{border-left-color:var(--hout)}
+.req-ster{color:var(--hout2)}
+.tag-opt{background:var(--zand)}
+.type-zoek input:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--groen);box-shadow:var(--ring)}
+.cite-text em{color:inherit}
+.live-vb-kop{text-transform:none;letter-spacing:0;font-size:.76rem;color:var(--text2)}
+
+/* logo: hangende inspringing */
+.logo-hi{display:inline-flex;flex-direction:column;gap:3px;width:24px;flex-shrink:0}
+.logo-hi i{display:block;height:4px;border-radius:2px;background:var(--hout)}
+.logo-hi i:first-child{background:var(--groen)}
+.logo-hi i:nth-child(2){width:78%;margin-left:22%}
+.logo-hi i:nth-child(3){width:56%;margin-left:22%}
+
+/* startpagina */
+#s1{max-width:none}
+.start{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);min-height:100vh}
+.start-links{padding:clamp(1.5rem,4vw,3rem) clamp(1.25rem,5vw,4.5rem) 1.5rem;display:flex;flex-direction:column;justify-content:center;max-width:680px;width:100%;justify-self:end}
+.start-kop{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-bottom:.7rem;border-bottom:1px solid #d9d2c6;margin-bottom:clamp(2rem,6vh,3.5rem)}
+.merk{display:flex;align-items:center;gap:.65rem;font-family:'Fraunces',Georgia,serif;font-size:1.08rem;font-weight:500;color:var(--antr)}
+.start-nav{display:flex;gap:.1rem}
+.start-nav button{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--text2);padding:.35rem .55rem;border-radius:8px;cursor:pointer}
+.start-nav button:hover{background:rgba(31,92,74,.08);color:var(--groen)}
+.start-titel{font-family:'DM Sans',sans-serif;font-weight:700;font-size:clamp(2.2rem,4.8vw,3.6rem);line-height:1.02;letter-spacing:-.035em;max-width:12ch;color:var(--antr)}
+.start-lead{font-size:1.02rem;line-height:1.6;color:var(--text2);max-width:42ch;margin:1rem 0 2rem}
+.zoekbalk{display:flex;background:#fff;border-radius:14px;padding:.4rem;box-shadow:0 1px 0 rgba(0,0,0,.04),0 12px 30px rgba(31,92,74,.10);max-width:520px}
+.zoekbalk input{flex:1;border:none;font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.7rem .9rem;background:none;min-width:0;color:var(--antr)}
+.zoekbalk input:focus{outline:none}
+.zoekbalk:focus-within{box-shadow:0 0 0 3px rgba(31,92,74,.18),0 12px 30px rgba(31,92,74,.10)}
+.zoekbalk button{border:none;background:var(--groen);color:#fff;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;border-radius:10px;padding:0 1.2rem;cursor:pointer}
+.zoekbalk button:hover{background:var(--groen2)}
+.start-acties{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1.4rem;max-width:520px}
+.actie{background:#fff;border-radius:12px;padding:1rem 1.1rem;border:1px solid transparent;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;color:var(--antr);transition:border-color .15s}
+.actie:hover{border-color:var(--groen)}
+.actie b{display:block;font-size:.95rem;font-weight:600}
+.actie small{display:block;font-size:.78rem;color:var(--text2);margin-top:.15rem}
+.actie.hoofd{background:var(--groen);color:#fff;grid-column:1/-1;display:flex;justify-content:space-between;align-items:center}
+.actie.hoofd:hover{background:var(--groen2)}
+.actie.hoofd small{color:#cfe3dc}
+.actie.hoofd em{font-style:normal;font-size:1.6rem;font-weight:300;line-height:1}
+.start-copy{text-align:left;padding:2.5rem 0 0}
+.start-foto{position:relative;margin:1rem 1rem 1rem 0;border-radius:28px;background:var(--foto) center/cover;min-height:420px}
+.start-kaartje{position:absolute;left:-2.5rem;bottom:3rem;width:min(380px,82%);background:#fff;border-radius:14px;padding:1rem 1.1rem;box-shadow:0 18px 40px rgba(0,0,0,.18);font-family:'Fraunces',Georgia,serif;font-size:.86rem;line-height:1.7;cursor:pointer}
+.start-kaartje[hidden]{display:none}
+.kaartje-kop{display:flex;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.7rem;color:var(--groen);font-weight:600;margin-bottom:.35rem}
+.kaartje-tekst{padding-left:1.2rem;text-indent:-1.2rem}
+@media(max-width:820px){
+  .start{grid-template-columns:1fr}
+  .start-links{justify-self:stretch;max-width:none}
+  .start-foto{order:-1;margin:0;border-radius:0 0 24px 24px;min-height:190px}
+  .start-kaartje{display:none}
+  .start-kop{margin-bottom:1.5rem}
+}
+@media(max-width:420px){.start-acties{grid-template-columns:1fr}.start-nav button{padding:.3rem .35rem;font-size:.76rem}.merk{font-size:.98rem;white-space:nowrap}}
+
+/* kop met logo op de overige schermen */
+.scherm-merk{display:flex;align-items:center;gap:.5rem;font-family:'Fraunces',Georgia,serif;font-size:.9rem;color:var(--text2);background:none;border:none;cursor:pointer;padding:1.1rem 0 0}
+.scherm-merk:hover{color:var(--groen)}
 </style>
 </head>
 <body>
 
 <div class="screen active" id="s1">
-  <div style="display:flex;justify-content:flex-end;padding-top:1rem">
-  <div style="display:flex;gap:.4rem;align-items:center">
-    <button onclick="document.getElementById('about-overlay').classList.add('open')" style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.3rem .75rem;cursor:pointer;transition:all .14s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">Over</button>
-    <button onclick="document.getElementById('help-overlay').classList.add('open')" style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.3rem .75rem;cursor:pointer;transition:all .14s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">Uitleg</button>
-    <button onclick="document.getElementById('feedback-overlay').classList.add('open')" style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.3rem .75rem;cursor:pointer;transition:all .14s" onmouseover="this.style.borderColor='var(--navy)';this.style.color='var(--navy)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">Feedback</button>
-  </div>
-  </div>
-
-  <div style="text-align:center;padding:3rem 0 1.75rem">
-    <h1 style="font-family:'Fraunces',Georgia,serif;font-size:2.2rem;font-weight:500;color:var(--navy);letter-spacing:-.02em;margin-bottom:.4rem">APA Bronvermelding</h1>
-
-  </div>
-
-  <div style="max-width:480px;margin:0 auto 1.5rem">
-    <input type="text" id="start-zoek" placeholder="&#128269; Zoek een bron in de bibliotheek&hellip;" onkeydown="if(event.key==='Enter')startZoek()" aria-label="Zoek een bron in de publieke bibliotheek" style="width:100%;padding:.7rem 1.2rem;border:1px solid var(--border2);border-radius:99px;font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text);background:var(--surface)">
-  </div>
-
-  <div style="display:flex;flex-direction:column;gap:.75rem;max-width:420px;margin:0 auto">
-    <button onclick="naarScherm(2)" style="width:100%;padding:1.75rem 1.5rem;background:var(--navy);color:white;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .14s;display:flex;align-items:center;gap:1.25rem;text-align:left" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-      <span style="font-size:2.2rem;line-height:1;flex-shrink:0">&#10133;</span>
-      <div>
-        <div style="font-size:1.05rem;font-weight:700;letter-spacing:.01em">Bron toevoegen</div>
-        <div style="font-size:.78rem;opacity:.75;margin-top:.2rem;font-weight:400">Genereer een correcte APA-vermelding</div>
+  <div class="start">
+    <div class="start-links">
+      <div class="start-kop">
+        <div class="merk"><span class="logo-hi" aria-hidden="true"><i></i><i></i><i></i></span>APA Bronvermelding</div>
+        <nav class="start-nav" aria-label="Informatie">
+          <button type="button" onclick="document.getElementById('about-overlay').classList.add('open')">Over</button>
+          <button type="button" onclick="document.getElementById('help-overlay').classList.add('open')">Uitleg</button>
+          <button type="button" onclick="document.getElementById('feedback-overlay').classList.add('open')">Feedback</button>
+        </nav>
       </div>
-    </button>
-    <button onclick="naarScherm(7)" style="width:100%;padding:1.75rem 1.5rem;background:var(--surface);color:var(--navy);border:2px solid var(--navy);border-radius:var(--r);font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .14s;display:flex;align-items:center;gap:1.25rem;text-align:left" onmouseover="this.style.background='var(--navy)';this.style.color='white'" onmouseout="this.style.background='var(--surface)';this.style.color='var(--navy)'">
-      <span style="font-size:2.2rem;line-height:1;flex-shrink:0">&#128218;</span>
-      <div>
-        <div style="font-size:1.05rem;font-weight:700;letter-spacing:.01em">Publieke bibliotheek</div>
-        <div style="font-size:.78rem;opacity:.65;margin-top:.2rem;font-weight:400">Bronnen gedeeld door iedereen</div>
+      <h1 class="start-titel">Je bronnenlijst, zonder gedoe.</h1>
+      <p class="start-lead">Vul je bron in, zie direct de juiste APA-vermelding en kopieer hem naar Word. Of vind hem in de bibliotheek die studenten samen opbouwen.</p>
+      <form class="zoekbalk" role="search" onsubmit="event.preventDefault();startZoek()">
+        <input type="search" id="start-zoek" placeholder="Zoek een bron, bijv. Verhoeven 2018" aria-label="Zoek een bron in de publieke bibliotheek">
+        <button type="submit">Zoeken</button>
+      </form>
+      <div class="start-acties">
+        <button type="button" class="actie hoofd" onclick="naarScherm(2)"><span><b>Bron toevoegen</b><small>21 brontypen, van boek tot ChatGPT</small></span><em aria-hidden="true">+</em></button>
+        <button type="button" class="actie" onclick="naarScherm(7)"><b>Publieke bibliotheek</b><small id="s1-pub-cnt">Bronnen gedeeld door iedereen</small></button>
+        <button type="button" class="actie" onclick="naarScherm(6)"><b>Mijn klas</b><small>Bronnen met klascode</small></button>
+        <button type="button" class="actie" onclick="naarScherm(5)"><b>Mijn bronnen</b><small><span id="s1-saved-cnt" style="display:none"></span><span id="s1-saved-leeg">Opgeslagen op dit apparaat</span></small></button>
       </div>
-    </button>
-    <button onclick="naarScherm(6)" style="width:100%;padding:1.75rem 1.5rem;background:var(--surface);color:var(--navy);border:2px solid var(--navy);border-radius:var(--r);font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .14s;display:flex;align-items:center;gap:1.25rem;text-align:left" onmouseover="this.style.background='var(--navy)';this.style.color='white'" onmouseout="this.style.background='var(--surface)';this.style.color='var(--navy)'">
-      <span style="font-size:2.2rem;line-height:1;flex-shrink:0">&#128101;</span>
-      <div>
-        <div style="font-size:1.05rem;font-weight:700;letter-spacing:.01em">Gedeeld met mijn klas</div>
-        <div style="font-size:.78rem;opacity:.65;margin-top:.2rem;font-weight:400">Bronnen binnen jouw klascode</div>
-      </div>
-    </button>
-    <button onclick="naarScherm(5)" style="width:100%;padding:1.75rem 1.5rem;background:var(--surface);color:var(--navy);border:2px solid var(--navy);border-radius:var(--r);font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .14s;display:flex;align-items:center;gap:1.25rem;text-align:left" onmouseover="this.style.background='var(--navy)';this.style.color='white'" onmouseout="this.style.background='var(--surface)';this.style.color='var(--navy)'">
-      <span style="font-size:2.2rem;line-height:1;flex-shrink:0">&#128278;</span>
-      <div style="flex:1">
-        <div style="font-size:1.05rem;font-weight:700;letter-spacing:.01em">Mijn bronnen</div>
-        <div style="font-size:.78rem;opacity:.65;margin-top:.2rem;font-weight:400">Lokaal opgeslagen op dit apparaat</div>
-      </div>
-      <span id="s1-saved-cnt" style="display:none;font-size:.85rem;font-weight:600;background:var(--gold-soft);color:#8f6c3d;border-radius:99px;padding:.25rem .75rem;flex-shrink:0"></span>
-    </button>
+      <div class="copyright start-copy">&copy; Patrick Bres &middot; foto: Unsplash</div>
+    </div>
+    <div class="start-foto" role="img" aria-label="Lichte bibliotheek met houten boekenkasten">
+      <div class="start-kaartje" id="start-kaartje" hidden><div class="kaartje-kop"><span id="kaartje-type">Laatst gedeeld</span><span id="kaartje-stem"></span></div><div class="kaartje-tekst" id="kaartje-tekst"></div></div>
+    </div>
   </div>
-
-  <div class="copyright" style="padding:2.5rem 0 0;text-align:center">&copy; Patrick Bres</div>
 </div>
 
 <div class="screen" id="s2">
@@ -1560,7 +1626,8 @@ function sluitHelp(e){
 
 function updateShortcut(){
   var n=opg.length,cnt=document.getElementById('s1-saved-cnt');
-  if(cnt){cnt.textContent=n+(n===1?' bron':' bronnen');cnt.style.display=n?'inline-block':'none'}
+  if(cnt){cnt.textContent=n+(n===1?' bron':' bronnen')+' op dit apparaat';cnt.style.display=n?'inline':'none'}
+  var leeg=document.getElementById('s1-saved-leeg');if(leeg)leeg.style.display=n?'none':'inline';
 }
 
 function swSavedTab(btn,bronIdx,tabIdx){
@@ -2076,6 +2143,35 @@ function kopieerSelectie(btn,plat){
   var klaar=function(){btn.textContent='Gekopieerd ✓ ('+items.length+', alfabetisch)';btn.classList.add('done');setTimeout(function(){btn.textContent=oud;btn.classList.remove('done');werkSelectieBij();},2200);};
   if(plat)navigator.clipboard.writeText(tekst).then(klaar);else schrijfKlembord(html,tekst,klaar);
 }
+
+/* ── Vormgeving: startpagina en logo op overige schermen ── */
+document.body.classList.toggle('op-start',document.getElementById('s1').classList.contains('active'));
+var _naarScherm2=naarScherm;
+naarScherm=function(n){_naarScherm2(n);document.body.classList.toggle('op-start',n===1);};
+['s2','s3','s4','s5','s6','s7'].forEach(function(id){
+  var s=document.getElementById(id);if(!s)return;
+  var eerste=s.firstElementChild;if(eerste&&eerste.classList.contains('copyright'))eerste.remove();
+  var m=document.createElement('button');m.type='button';m.className='scherm-merk';m.setAttribute('aria-label','Naar de startpagina');
+  m.innerHTML='<span class="logo-hi" aria-hidden="true"><i></i><i></i><i></i></span>APA Bronvermelding';
+  m.onclick=function(){naarScherm(1);};
+  s.insertBefore(m,s.firstChild);
+});
+async function vulStartpagina(){
+  try{
+    var codes=await sbFetch('rpc/get_klascodes','POST',{});
+    var pub=codes.filter(function(r){return r.klascode==='PUBLIEK'})[0];
+    if(pub&&pub.aantal)document.getElementById('s1-pub-cnt').textContent=pub.aantal+' gedeelde bronnen';
+  }catch(e){}
+  try{
+    var rows=await sbFetch('rpc/zoek_bronnen','POST',{p_klascode:'PUBLIEK',p_sort:'datum',p_offset:0});
+    var r=rows&&rows[0];if(!r)return;
+    document.getElementById('kaartje-type').textContent='Laatst gedeeld · '+(lbls[r.brontype]||'Bron');
+    var pos=r.stemmen_positief||0;document.getElementById('kaartje-stem').textContent=pos?'👍 '+pos:'';
+    document.getElementById('kaartje-tekst').innerHTML=veiligeHtml(r.bronnenlijst_html||esc(r.bronnenlijst));
+    var k=document.getElementById('start-kaartje');k.hidden=false;k.title='Bekijk de publieke bibliotheek';k.onclick=function(){naarScherm(7);};
+  }catch(e){}
+}
+vulStartpagina();
 
 /* ── Toegankelijkheid & toetsenbord ── */
 function maakToegankelijk(){
