@@ -239,6 +239,19 @@ body.op-start{padding:0}
 }
 @media(max-width:420px){.start-acties{grid-template-columns:1fr}.start-nav button{padding:.3rem .35rem;font-size:.76rem}.merk{font-size:.98rem;white-space:nowrap}}
 
+/* ── Meeschalen met het scherm: alle maten in rem groeien mee met de basislettergrootte ── */
+html{font-size:clamp(16px,calc(10.5px + .42vw),21px)}
+.screen{max-width:44rem}
+#s5,#s6,#s7{max-width:50rem}
+.start-links{max-width:46rem}
+.zoekbalk,.start-acties{max-width:34rem}
+.start-lead{max-width:40ch}
+.start-kaartje{width:min(24rem,82%)}
+.src-card{flex:0 0 8.2rem;min-width:8.2rem}
+@media(min-width:1600px){.start{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}}
+/* iPhone zoomt in bij velden kleiner dan 16px */
+@media(max-width:600px){input,select,textarea{font-size:16px!important}}
+
 /* kop met logo op de overige schermen */
 .scherm-merk{display:flex;align-items:center;gap:.5rem;font-family:'Fraunces',Georgia,serif;font-size:.9rem;color:var(--text2);background:none;border:none;cursor:pointer;padding:1.1rem 0 0}
 .scherm-merk:hover{color:var(--groen)}
