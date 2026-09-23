@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>APA-tests</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;color:#1a1714;background:#f7f5f1}
+h1{font-size:1.4rem;margin-bottom:.25rem}
+#samenvatting{font-weight:600;margin:1rem 0;padding:.6rem .9rem;border-radius:8px}
+.ok{background:#f0fdf4;color:#166534}.fout{background:#fff1f1;color:#991b1b}
+.case{background:#fff;border:1px solid #e2ddd6;border-left:5px solid #16a34a;border-radius:8px;padding:.6rem .9rem;margin:.5rem 0;font-size:.85rem}
+.case.rood{border-left-color:#dc2626}
+.case b{display:block;margin-bottom:.2rem}
+.ref{color:#9a9590;font-weight:400}
+.diff{font-family:ui-monospace,monospace;font-size:.78rem;margin:.25rem 0 0;white-space:pre-wrap}
+.diff .v{color:#166534}.diff .k{color:#991b1b}
+iframe{display:none}
+</style>
+</head>
+<body>
+<h1>APA-tests</h1>
+<p>Draait voorbeeldinvoer door de generatoren in <code>APA-tool.html</code> en vergelijkt met de verwachte vermelding volgens <em>De APA-richtlijnen uitgelegd</em> (3e ed.). Open via een lokale webserver (bijv. <code>npx http-server</code>) op <code>/tests/apa-tests.html</code>.</p>
+<div id="samenvatting">Bezig…</div>
+<div id="resultaten"></div>
+<iframe id="app" src="../APA-tool.html"></iframe>
+<script>
+// Elke case: type, velden (f-*), aut/red: [[achternaam, voorletters, tussenvoegsel]], en verwachte uitvoer.
+// bl/lp/hk worden exact vergeleken (HTML, met <em> voor cursief); noot = tekst die in de noot moet staan.
+var CASES=[
+{naam:'Boek, één auteur, druk niet cursief, rechtsvorm uitgever weg',ref:'§2C, §2D',type:'boek',
+ aut:[['Jansen','P.','']],velden:{'f-jaar':'2021','f-titel':'Onderzoek doen','f-ondertitel':'Een handleiding','f-druk':'3e druk','f-uitgever':'Noordhoff Uitgevers B.V.'},
+ bl:'Jansen, P. (2021). <em>Onderzoek doen: Een handleiding</em> (3e druk). Noordhoff Uitgevers.',lp:'Jansen (2021)',hk:'(Jansen, 2021)'},
+{naam:'Boek zonder auteur: titel vooraan, cursief in tekst',ref:'§2.2, §1.2.4',type:'boek',
+ velden:{'f-jaar':'2008','f-titel':'Groot woordenboek hedendaags Nederlands','f-uitgever':'Van Dale'},
+ bl:'<em>Groot woordenboek hedendaags Nederlands</em>. (2008). Van Dale.',lp:'<em>Groot woordenboek hedendaags Nederlands</em> (2008)',hk:'(<em>Groot woordenboek hedendaags Nederlands</em>, 2008)'},
+{naam:'Boek, twee auteurs',ref:'§2A, §1.2.2',type:'boek',
+ aut:[['Jansen','P.',''],['Bos','A.','']],velden:{'f-jaar':'2021','f-titel':'Titel','f-uitgever':'Boom'},
+ bl:'Jansen, P., & Bos, A. (2021). <em>Titel</em>. Boom.',lp:'Jansen en Bos (2021)',hk:'(Jansen & Bos, 2021)'},
+{naam:'Boek, drie auteurs met tussenvoegsel',ref:'§2A, §1.2.1-2',type:'boek',
+ aut:[['Berg','G. H.','van den'],['Bos','A.',''],['Kok','C.','']],velden:{'f-jaar':'2020','f-titel':'Titel','f-uitgever':'Boom'},
+ bl:'Van den Berg, G. H., Bos, A., & Kok, C. (2020). <em>Titel</em>. Boom.',lp:'Van den Berg et al. (2020)',hk:'(Van den Berg et al., 2020)'},
+{naam:'Boek, oude DOI-notatie "doi:" omzetten',ref:'§2.5',type:'boek',
+ aut:[['Jansen','P.','']],velden:{'f-jaar':'2021','f-titel':'Titel','f-uitgever':'Springer','f-doi':'doi:10.1000/xyz123'},
+ bl:'Jansen, P. (2021). <em>Titel</em>. Springer. https://doi.org/10.1000/xyz123'},
+{naam:'Boek, oude DOI-notatie "http://dx.doi.org/" omzetten',ref:'§2.5',type:'boek',
+ aut:[['Jansen','P.','']],velden:{'f-jaar':'2021','f-titel':'Titel','f-uitgever':'Springer','f-doi':'http://dx.doi.org/10.1000/abc'},
+ bl:'Jansen, P. (2021). <em>Titel</em>. Springer. https://doi.org/10.1000/abc'},
+{naam:'Boek, titel eindigt op vraagteken',ref:'§2C',type:'boek',
+ aut:[['Jansen','P.','']],velden:{'f-jaar':'2021','f-titel':'Wat is leren?','f-uitgever':'Boom'},
+ bl:'Jansen, P. (2021). <em>Wat is leren?</em> Boom.'},
+{naam:'Boek, 22 auteurs: eerste 19 + . . . + laatste',ref:'§2.3',type:'boek',
+ aut:Array.from({length:22},function(_,i){return ['A'+(i+1),'B.','']}),velden:{'f-jaar':'2020','f-titel':'T','f-uitgever':'U'},
+ bl:Array.from({length:19},function(_,i){return 'A'+(i+1)+', B.'}).join(', ')+', . . . A22, B. (2020). <em>T</em>. U.'},
+{naam:'Hoofdstuk, twee redacteuren met &, druk + pagina\'s niet cursief',ref:'§3.3',type:'hoofdstuk',
+ aut:[['Kok','C.','']],red:[['Jansen','P.',''],['Bos','A.','']],velden:{'f-jaar':'2019','f-titel':'Leren op de werkplek','f-boek':'Onderwijs in beweging','f-druk':'2e druk','f-pvan':'45','f-ptot':'68','f-uitgever':'Boom'},
+ bl:'Kok, C. (2019). Leren op de werkplek. In P. Jansen & A. Bos (Reds.), <em>Onderwijs in beweging</em> (2e druk, pp. 45-68). Boom.',lp:'Kok (2019)',hk:'(Kok, 2019)'},
+{naam:'Hoofdstuk, drie redacteuren, één met tussenvoegsel',ref:'§3.3',type:'hoofdstuk',
+ aut:[['Kok','C.','']],red:[['Jansen','P.',''],['Bos','A.',''],['Vries','D.','de']],velden:{'f-jaar':'2019','f-titel':'Leren','f-boek':'Onderwijs','f-pvan':'1','f-ptot':'9','f-uitgever':'Boom'},
+ bl:'Kok, C. (2019). Leren. In P. Jansen, A. Bos, & D. de Vries (Reds.), <em>Onderwijs</em> (pp. 1-9). Boom.'},
+{naam:'Tijdschriftartikel met DOI',ref:'§3.4.1',type:'tijdschrift',
+ aut:[['Ketelaar','P. E.','']],velden:{'f-jaar':'2019','f-titel':'Mediagebruik onder jongeren','f-tijdschrift':'Tijdschrift voor Communicatiewetenschap','f-jaargang':'48','f-nummer':'4','f-pvan':'209','f-ptot':'230','f-doi':'10.5117/TCW2019.4.001'},
+ bl:'Ketelaar, P. E. (2019). Mediagebruik onder jongeren. <em>Tijdschrift voor Communicatiewetenschap</em>, <em>48</em>(4), 209-230. https://doi.org/10.5117/TCW2019.4.001',lp:'Ketelaar (2019)',hk:'(Ketelaar, 2019)'},
+{naam:'Tijdschriftartikel zonder auteur: titel vooraan',ref:'§2.2',type:'tijdschrift',
+ velden:{'f-jaar':'2019','f-titel':'Nieuwe inzichten','f-tijdschrift':'Psychologie Magazine','f-jaargang':'38','f-nummer':'5'},
+ bl:'Nieuwe inzichten. (2019). <em>Psychologie Magazine</em>, <em>38</em>(5).',hk:'("Nieuwe inzichten", 2019)'},
+{naam:'Krantenartikel zonder auteur (papier)',ref:'§3.4.2',type:'krant',
+ velden:{'f-jaar':'2021','f-dag':'15 maart','f-titel':'Kabinet valt','f-krant':'De Volkskrant','f-pagina':'p. 4'},
+ bl:'Kabinet valt. (2021, 15 maart). <em>De Volkskrant</em>, p. 4.'},
+{naam:'Webpagina, organisatie als auteur',ref:'§3.9.1',type:'website',
+ aut:[['Rijksoverheid','','']],velden:{'f-jaar':'2021','f-dag':'13 januari','f-titel':'Coronavirus COVID-19','f-url':'https://www.rijksoverheid.nl/corona','f-raaddag':'12','f-raaddatum':'mei 2024'},
+ bl:'Rijksoverheid. (2021, 13 januari). <em>Coronavirus COVID-19</em>. Geraadpleegd op 12 mei 2024, van https://www.rijksoverheid.nl/corona',lp:'Rijksoverheid (2021)',hk:'(Rijksoverheid, 2021)'},
+{naam:'Webpagina zonder auteur: titel vooraan',ref:'§3.9.1 vb. 96',type:'website',
+ velden:{'f-titel':'Nieuw album Sticks','f-website':'NU.nl','f-url':'https://nu.nl/x','f-raaddag':'1','f-raaddatum':'juni 2020'},
+ bl:'<em>Nieuw album Sticks</em>. (z.d.). NU.nl. Geraadpleegd op 1 juni 2020, van https://nu.nl/x',hk:'(<em>Nieuw album Sticks</em>, z.d.)'},
+{naam:'Rapport met rapportnummer',ref:'§3.5 vb. 59',type:'rapport',
+ aut:[['RIVM','','']],velden:{'f-jaar':'2020','f-nr':'Rapport 2020-85','f-titel':'Staat van volksgezondheid'},
+ bl:'RIVM. (2020). <em>Staat van volksgezondheid</em> (Rapport 2020-85).'},
+{naam:'Brochure: omschrijving tussen vierkante haken',ref:'§3.5 vb. 66',type:'rapport',
+ aut:[['Hartstichting','','']],velden:{'f-titel':'Gezond eten','f-soort':'Brochure'},
+ bl:'Hartstichting. (z.d.). <em>Gezond eten</em> [Brochure].'},
+{naam:'Proefschrift online (instelling binnen haken)',ref:'§3.6',type:'proefschrift',
+ aut:[['Jansen','P.','']],velden:{'f-jaar':'2018','f-type':'Proefschrift','f-titel':'Leren in teams','f-instelling':'Universiteit Utrecht','f-databank':'NARCIS'},
+ bl:'Jansen, P. (2018). <em>Leren in teams</em> [Proefschrift, Universiteit Utrecht]. NARCIS.'},
+{naam:'Proefschrift papier (instelling als uitgever)',ref:'§3.6',type:'proefschrift',
+ aut:[['Jansen','P.','']],velden:{'f-jaar':'2018','f-type':'Proefschrift','f-titel':'Leren in teams','f-instelling':'Universiteit Utrecht'},
+ bl:'Jansen, P. (2018). <em>Leren in teams</em> [Proefschrift]. Universiteit Utrecht.'},
+{naam:'YouTube-video',ref:'§3.10.1 vb. 109',type:'youtube',
+ aut:[['NOS','','']],velden:{'f-jaar':'2021','f-dag':'6 februari','f-titel':'Uitleg: zo werkt de stemwijzer','f-platform':'YouTube','f-url':'https://youtu.be/x','f-raaddag':'3','f-raaddatum':'maart 2021'},
+ bl:'NOS. (2021, 6 februari). <em>Uitleg: zo werkt de stemwijzer</em> [Video]. YouTube. Geraadpleegd op 3 maart 2021, van https://youtu.be/x'},
+{naam:'Naslagwerk (Wikipedia)',ref:'§3.2 vb. 36',type:'naslagwerk',
+ velden:{'f-lemma':'ADHD','f-jaar':'2020','f-dag':'1 september','f-naslagwerk':'Wikipedia','f-url':'https://nl.wikipedia.org/wiki/ADHD','f-raaddag':'2','f-raaddatum':'oktober 2020'},
+ bl:'ADHD. (2020, 1 september). In <em>Wikipedia</em>. Geraadpleegd op 2 oktober 2020, van https://nl.wikipedia.org/wiki/ADHD',hk:'("ADHD", 2020)'},
+{naam:'Social media (Tweet met gebruikersnaam)',ref:'§3.9.2',type:'social',
+ aut:[['NOS','','']],velden:{'f-handle':'@NOS','f-jaar':'2021','f-dag':'9 september','f-inhoud':'Het kabinet is gevallen #politiek','f-platform':'Twitter / X','f-type':'Tweet'},
+ bl:'NOS [@NOS]. (2021, 9 september). <em>Het kabinet is gevallen #politiek</em> [Tweet]. Twitter / X.'},
+{naam:'Podcast: [Omschrijving] direct na afleveringstitel',ref:'§3.10.2 vb. 113',type:'podcast',
+ aut:[['Bos','A.','']],velden:{'f-rol':'Presentator','f-jaar':'2021','f-dag':'6 november','f-titel':'Slapen','f-seizoen':'Seizoen 2, nr. 1','f-podcast':'De Dokterspodcast','f-uitgever':'NTR'},
+ bl:'Bos, A. (Presentator). (2021, 6 november). Slapen (Seizoen 2, nr. 1) [Aflevering audio podcast]. In <em>De Dokterspodcast</em>. NTR.'},
+{naam:'Film met regisseur',ref:'§3.10.1 vb. 106',type:'film',
+ aut:[['Verhoeven','P.','']],velden:{'f-rol':'Regisseur','f-jaar':'2006','f-type':'Film','f-titel':'Zwartboek','f-producent':'Fu Works'},
+ bl:'Verhoeven, P. (Regisseur). (2006). <em>Zwartboek</em> [Film]. Fu Works.'},
+{naam:'Muziek, klassiek werk: beide jaartallen, origineel-noot als laatste',ref:'§3.10.2',type:'muziek',
+ aut:[['Prokofiev','S.','']],velden:{'f-jaar':'2009','f-origjaar':'1936','f-titel':'Peter en de wolf','f-type':'Album','f-label':'Deutsche Grammophon','f-url':'https://x.nl/p','f-raaddag':'1','f-raaddatum':'mei 2024'},
+ bl:'Prokofiev, S. (2009). <em>Peter en de wolf</em> [Album]. Deutsche Grammophon. Geraadpleegd op 1 mei 2024, van https://x.nl/p (Origineel werk gepubliceerd in 1936)',hk:'(Prokofiev, 1936/2009)'},
+{naam:'Congresbijdrage',ref:'§3.7.1',type:'congres',
+ aut:[['Jansen','P.','']],velden:{'f-jaar':'2019','f-dag':'26-28 juni','f-titel':'Leren met games','f-type':'Keynote','f-congres':'Onderwijs Research Dagen','f-locatie':'Heerlen'},
+ bl:'Jansen, P. (2019, 26-28 juni). Leren met games [Keynote]. Onderwijs Research Dagen, Heerlen.'},
+{naam:'Wettekst: titel cursief',ref:'§3.8.1',type:'wetgeving',
+ velden:{'f-naam':'Wet op het voortgezet onderwijs','f-jaar':'1992','f-dag':'24 september','f-type':'Wettekst','f-bron':'Overheid.nl'},
+ bl:'<em>Wet op het voortgezet onderwijs</em>. (1992, 24 september). Overheid.nl.',hk:'(<em>Wet op het voortgezet onderwijs</em>, 1992)'},
+{naam:'Dataset: versienummer niet cursief',ref:'§3.11.1',type:'dataset',
+ aut:[['Centraal Bureau voor de Statistiek','','']],velden:{'f-jaar':'2021','f-versie':'Version V1','f-naam':'Bevolking per gemeente','f-uitgever':'ICPSR'},
+ bl:'Centraal Bureau voor de Statistiek. (2021). <em>Bevolking per gemeente</em> (Version V1) [Dataset]. ICPSR.'},
+{naam:'Software/app: naam cursief',ref:'§3.11.2',type:'software',
+ aut:[['Duolingo','','']],velden:{'f-jaar':'2021','f-versie':'5.2','f-naam':'Duolingo','f-type':'App','f-uitgever':'Google Play'},
+ bl:'Duolingo. (2021). <em>Duolingo</em> (Versie 5.2) [App]. Google Play.'},
+{naam:'Afbeelding overgenomen: opmerking met copyright',ref:'§4.1.1',type:'afbeelding',
+ aut:[['Jansen','P.','']],velden:{'f-jaar':'2021','f-type':'Tabel','f-titel':'Opleidingsniveau','f-pagina':'45','f-copyjaar':'2019','f-bron':'Onderzoek doen!','f-uitgever':'Noordhoff','f-copyhouder':'Noordhoff'},
+ noot:'Opmerking. Overgenomen uit Onderzoek doen! (p. 45) door P. Jansen, 2021, Noordhoff. Copyright 2019, Noordhoff.'},
+{naam:'Afbeelding aangepast + Creative Commons',ref:'§4.1',type:'afbeelding',
+ aut:[['Jansen','P.','']],velden:{'f-jaar':'2021','f-type':'Figuur','f-titel':'Model','f-bron':'Onderzoek doen!','f-uitgever':'Noordhoff','f-aangepast':true,'f-licentie':'CC BY 4.0'},
+ noot:'Opmerking. Aangepast overgenomen uit Onderzoek doen! door P. Jansen, 2021, Noordhoff. CC BY 4.0.'},
+{naam:'Digitale leeromgeving',ref:'§3.9.3 vb. 104',type:'leeromgeving',
+ aut:[['Hogeschool van Arnhem en Nijmegen','','']],velden:{'f-jaar':'2021','f-type':'Studiehandleiding','f-titel':'Onderzoeksvaardigheden','f-platform':'Brightspace'},
+ bl:'Hogeschool van Arnhem en Nijmegen. (2021). <em>Onderzoeksvaardigheden</em> [Studiehandleiding]. Brightspace.'},
+{naam:'AI-tool (HAN-richtlijn)',ref:'HAN',type:'aitool',
+ velden:{'f-ontwikkelaar':'OpenAI','f-jaar':'2026','f-naam':'ChatGPT','f-versie':'GPT-5.5 Instant','f-url':'https://chat.openai.com'},
+ bl:'OpenAI. (2026). <em>ChatGPT</em> (GPT-5.5 Instant) [Generatieve AI]. https://chat.openai.com',hk:'(OpenAI, 2026)'},
+{naam:'Persoonlijke communicatie: niet in bronnenlijst',ref:'§1.5.1',type:'perscomm',
+ velden:{'f-naam':'J. Jansen','f-datum':'12 juli 2024','f-type':'e-mail'},
+ hk:'(J. Jansen, persoonlijke communicatie, 12 juli 2024)'}
+];
+
+function vul(w,c){
+  w.ht=c.type;w.renderForm(c.type);
+  function auteurs(px,lijst){
+    (lijst||[]).forEach(function(a,i){
+      if(i>0)w.addAut(px);
+      var rij=w.document.querySelectorAll('#'+px+'-rows .arow')[i];
+      rij.querySelector('.a-ach').value=a[0];rij.querySelector('.a-vrl').value=a[1];rij.querySelector('.a-tss').value=a[2];
+    });
+  }
+  auteurs('auth',c.aut);auteurs('red',c.red);
+  Object.keys(c.velden||{}).forEach(function(id){
+    var el=w.document.getElementById(id);
+    if(!el)throw new Error('Veld '+id+' bestaat niet in formulier '+c.type);
+    if(el.type==='checkbox')el.checked=!!c.velden[id];else el.value=c.velden[id];
+  });
+  return w.gens[c.type]();
+}
+function tekst(html){var d=document.createElement('div');d.innerHTML=html||'';return d.textContent.replace(/\s+/g,' ').trim();}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+document.getElementById('app').onload=function(){
+  var w=this.contentWindow,goed=0,uit=document.getElementById('resultaten');
+  CASES.forEach(function(c){
+    var fouten=[],r;
+    try{r=vul(w,c);}catch(e){fouten.push('Fout: '+e.message);}
+    if(r===null)fouten.push('Generator gaf null (verplicht veld leeg?)');
+    if(r){
+      ['bl','lp','hk'].forEach(function(k){if(c[k]!==undefined&&r[k]!==c[k])fouten.push({k:k,verwacht:c[k],kreeg:r[k]});});
+      if(c.noot&&tekst(r.note).indexOf(c.noot)<0)fouten.push({k:'noot',verwacht:c.noot,kreeg:tekst(r.note)});
+    }
+    if(!fouten.length)goed++;
+    var d=document.createElement('div');d.className='case'+(fouten.length?' rood':'');
+    d.innerHTML='<b>'+(fouten.length?'✗ ':'✓ ')+esc(c.naam)+' <span class="ref">'+esc(c.type+' · '+c.ref)+'</span></b>'+
+      fouten.map(function(f){return typeof f==='string'?'<div class="diff k">'+esc(f)+'</div>':
+        '<div class="diff">'+f.k+':\n<span class="v">verwacht: '+esc(f.verwacht)+'</span>\n<span class="k">kreeg:    '+esc(f.kreeg)+'</span></div>'}).join('');
+    uit.appendChild(d);
+  });
+  var s=document.getElementById('samenvatting');
+  s.textContent=goed+' van '+CASES.length+' tests geslaagd';
+  s.className=goed===CASES.length?'ok':'fout';
+  document.title=(goed===CASES.length?'✓ ':'✗ ')+goed+'/'+CASES.length+' APA-tests';
+};
+</script>
+</body>
+</html>
