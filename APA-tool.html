@@ -1551,7 +1551,19 @@ function punt(s){if(!s)return '';s=s.trim();return /[.?!]$/.test(s)?s:s+'.'}
 function samTit(t,o){if(!o)return t;return /[.?!:]$/.test(t.trim())?t.trim()+' '+o:t.trim()+': '+o}
 function vp(doi,url,rd,rm){var d=(doi||'').trim(),u=(url||'').trim();if(d)return d.startsWith('10.')?'https://doi.org/'+d:d;if(u){if(rd&&rm)return 'Geraadpleegd op '+rd+' '+rm+', van '+u;if(rm)return 'Geraadpleegd op '+rm+', van '+u;return 'Geraadpleegd van '+u}return ''}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function veiligeHtml(s){return esc(s).replace(/&lt;(\/?)em&gt;/gi,'<$1em>')}
+// HTML uit de database: alleen tekst en cursief blijven over, al het andere wordt tekst
+function veiligeHtml(s){
+  var doc=new DOMParser().parseFromString('<body>'+String(s==null?'':s)+'</body>','text/html');
+  function walk(n){
+    var out='';
+    n.childNodes.forEach(function(c){
+      if(c.nodeType===3)out+=esc(c.nodeValue);
+      else if(c.nodeType===1){var t=c.tagName.toLowerCase(),inner=walk(c);out+=(t==='em'||t==='i')?'<em>'+inner+'</em>':inner;}
+    });
+    return out;
+  }
+  return walk(doc.body);
+}
 function getAut(px){var rows=document.querySelectorAll('#'+px+'-rows .arow'),lijst=[];rows.forEach(function(r){var a=(r.querySelector('.a-ach')||{}).value||'';if(a.trim())lijst.push({achternaam:esc(a.trim()),voorletters:esc(((r.querySelector('.a-vrl')||{}).value||'').trim()),tussenvoegsel:esc(((r.querySelector('.a-tss')||{}).value||'').trim())})});return lijst}
 function g(id){var el=document.getElementById(id);return el?esc(el.value.trim()):''}
 function gs(id){var el=document.getElementById(id);return el?esc(el.value):''}
