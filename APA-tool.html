@@ -267,6 +267,16 @@ html{font-size:clamp(16px,calc(10.5px + .42vw),21px)}
 /* iPhone zoomt in bij velden kleiner dan 16px */
 @media(max-width:600px){input,select,textarea{font-size:16px!important}}
 
+/* selectiebalk bovenaan bibliotheek en klaslijst */
+.lijst-selbalk{position:sticky;top:.5rem;z-index:6;display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap;background:#fff;border:1px solid var(--border);border-radius:12px;padding:.55rem .6rem .55rem .9rem;margin-bottom:.75rem;font-size:.8rem;color:var(--text3);box-shadow:var(--shadow)}
+.lijst-selbalk.actief{border-color:var(--groen);color:var(--antr);box-shadow:0 8px 24px rgba(31,92,74,.16)}
+.result-card:has(> div > .lijst-selbalk){overflow:visible}
+.lsb-knoppen{display:flex;gap:.35rem}
+.lsb-knoppen button{font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;border-radius:8px;padding:.4rem .8rem;cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text2)}
+.lsb-knoppen .lsb-word{background:var(--groen);border-color:var(--groen);color:#fff}
+.lsb-knoppen button:disabled{opacity:.4;cursor:default}
+.lsb-knoppen .lsb-wis{padding:.4rem .6rem}
+
 /* kop met logo op de overige schermen */
 .scherm-merk{display:flex;align-items:center;gap:.5rem;font-family:'Fraunces',Georgia,serif;font-size:.9rem;color:var(--text2);background:none;border:none;cursor:pointer;padding:1.1rem 0 0}
 .scherm-merk:hover{color:var(--groen)}
@@ -1205,7 +1215,7 @@ function renderGedeeldRows(rows,listId){
           var txt=document.createElement('div');
           txt.className='cite-text'+(ti===0?' bl':'');
           txt.style.cssText='font-family:Fraunces,Georgia,serif;font-size:.95rem;line-height:1.9;word-break:break-word;'+(ti===0?'text-indent:-1.5rem;padding-left:1.5rem':'');
-          txt.id='gr-'+i+'-'+ti;
+          txt.id=(listId||'gedeeld-list')+'-gr-'+i+'-'+ti;
           txt.innerHTML=veiligeHtml(v);
           var btnRow=document.createElement('div');
           btnRow.style.cssText='margin-top:.75rem';
@@ -1213,7 +1223,7 @@ function renderGedeeldRows(rows,listId){
           cbtnW.className='copy-btn';
           cbtnW.style.cssText='position:static;margin:0;width:100%';
           cbtnW.textContent='Kopiëren';
-          (function(id,rid){cbtnW.onclick=function(){kopieerWord(id,this);sbFetch('rpc/tel_kopie','POST',{p_id:rid}).catch(function(){});}})('gr-'+i+'-'+ti,r.id);
+          (function(id,rid){cbtnW.onclick=function(){kopieerWord(id,this);sbFetch('rpc/tel_kopie','POST',{p_id:rid}).catch(function(){});}})((listId||'gedeeld-list')+'-gr-'+i+'-'+ti,r.id);
           btnRow.appendChild(cbtnW);
           pane.appendChild(txt);pane.appendChild(btnRow);
         }
@@ -2206,6 +2216,51 @@ async function vulStartpagina(){
   }catch(e){}
 }
 vulStartpagina();
+
+/* ── Bibliotheek en klaslijst: bronnen aanvinken en selectie alfabetisch kopiëren ── */
+var lijstSelectie={'pub-list':new Map(),'gedeeld-list':new Map()};
+function selBalk(listId){
+  var id='selbalk-'+listId,b=document.getElementById(id);if(b)return b;
+  var list=document.getElementById(listId);if(!list)return null;
+  b=document.createElement('div');b.id=id;b.className='lijst-selbalk';
+  b.innerHTML='<span class="lsb-tekst"></span><span class="lsb-knoppen"><button type="button" class="lsb-word">Kopieer voor Word</button><button type="button" class="lsb-plat">Platte tekst</button><button type="button" class="lsb-wis" aria-label="Selectie wissen">&#215;</button></span>';
+  b.querySelector('.lsb-word').onclick=function(){kopieerLijstSelectie(listId,this,false);};
+  b.querySelector('.lsb-plat').onclick=function(){kopieerLijstSelectie(listId,this,true);};
+  b.querySelector('.lsb-wis').onclick=function(){lijstSelectie[listId].clear();list.querySelectorAll('.lsb-vink').forEach(function(c){c.checked=false;c.closest('.result-card').classList.remove('gekozen');});werkLijstBalkBij(listId);};
+  list.parentNode.insertBefore(b,list);
+  return b;
+}
+function werkLijstBalkBij(listId){
+  var b=selBalk(listId);if(!b)return;var n=lijstSelectie[listId].size;
+  b.classList.toggle('actief',n>0);
+  b.querySelector('.lsb-tekst').textContent=n?n+' bron'+(n===1?'':'nen')+' geselecteerd · wordt alfabetisch gekopieerd':'Vink bronnen aan om ze samen alfabetisch te kopiëren';
+  b.querySelectorAll('button').forEach(function(k){k.disabled=!n;});
+}
+var _renderGedeeldRows=renderGedeeldRows;
+renderGedeeldRows=function(rows,listId){
+  _renderGedeeldRows(rows,listId);
+  var lid=listId||'gedeeld-list',list=document.getElementById(lid),sel=lijstSelectie[lid];if(!list||!sel)return;
+  [].filter.call(list.children,function(c){return c.classList.contains('result-card');}).forEach(function(kaart,i){
+    var r=rows[i],lbl=kaart.querySelector('span');if(!r||!lbl)return;
+    var l=document.createElement('label');l.className='sel-bron';
+    var cb=document.createElement('input');cb.type='checkbox';cb.className='lsb-vink';cb.checked=sel.has(r.id);
+    cb.setAttribute('aria-label','Selecteer deze bron');
+    cb.onchange=function(){if(cb.checked)sel.set(r.id,r);else sel.delete(r.id);kaart.classList.toggle('gekozen',cb.checked);werkLijstBalkBij(lid);};
+    l.appendChild(cb);l.appendChild(document.createTextNode(lbl.textContent));
+    lbl.replaceWith(l);kaart.classList.toggle('gekozen',cb.checked);
+  });
+  werkLijstBalkBij(lid);
+};
+function kopieerLijstSelectie(listId,btn,plat){
+  var items=Array.from(lijstSelectie[listId].values()).map(function(r){var h=r.bronnenlijst_html||esc(r.bronnenlijst);return{html:veiligeHtml(h),tekst:kaleTekst(h)};})
+    .sort(function(a,b){return apaVergelijk(a.tekst,b.tekst);});
+  if(!items.length)return;
+  var tekst=items.map(function(i){return i.tekst}).join('\n\n');
+  var html='<!DOCTYPE html><html><head><style>p.apa{margin:0 0 0 36pt;text-indent:-36pt;line-height:200%;font-family:"Times New Roman",serif;font-size:12pt}em{font-style:italic}</style></head><body>'
+    +items.map(function(i){return '<p class=apa>'+i.html+'</p>'}).join('')+'</body></html>';
+  var oud=btn.textContent,klaar=function(){btn.textContent='Gekopieerd ✓';setTimeout(function(){btn.textContent=oud;},2000);};
+  if(plat)navigator.clipboard.writeText(tekst).then(klaar);else schrijfKlembord(html,tekst,klaar);
+}
 
 /* ── Toegankelijkheid & toetsenbord ── */
 function maakToegankelijk(){
