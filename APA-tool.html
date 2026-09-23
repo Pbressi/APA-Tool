@@ -230,6 +230,15 @@ body.op-start{padding:0}
 .start-kaartje[hidden]{display:none}
 .kaartje-kop{display:flex;justify-content:space-between;font-family:'DM Sans',sans-serif;font-size:.7rem;color:var(--groen);font-weight:600;margin-bottom:.35rem}
 .kaartje-tekst{padding-left:1.2rem;text-indent:-1.2rem}
+.start-kaartje{cursor:default;bottom:2rem}
+.kaartje-kop{align-items:baseline}
+.kaartje-alles{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;color:var(--groen)}
+.kaartje-lijst{list-style:none}
+.kaartje-lijst li{padding:.55rem 0 .55rem 1.2rem;text-indent:-1.2rem;border-top:1px solid var(--border);cursor:pointer}
+.kaartje-lijst li:first-child{border-top:none;padding-top:.2rem}
+.kaartje-lijst li:last-child{padding-bottom:0}
+.kaartje-lijst li:hover{color:var(--groen)}
+.kaartje-meta{display:block;text-indent:0;font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3);margin-top:.15rem}
 @media(max-width:820px){
   .start{grid-template-columns:1fr}
   .start-links{justify-self:stretch;max-width:none}
@@ -285,7 +294,7 @@ html{font-size:clamp(16px,calc(10.5px + .42vw),21px)}
       <div class="copyright start-copy">&copy; Patrick Bres &middot; foto: Unsplash</div>
     </div>
     <div class="start-foto" role="img" aria-label="Lichte bibliotheek met houten boekenkasten">
-      <div class="start-kaartje" id="start-kaartje" hidden><div class="kaartje-kop"><span id="kaartje-type">Laatst gedeeld</span><span id="kaartje-stem"></span></div><div class="kaartje-tekst" id="kaartje-tekst"></div></div>
+      <div class="start-kaartje" id="start-kaartje" hidden><div class="kaartje-kop"><span>Laatst gedeeld</span><button type="button" class="link-knop kaartje-alles" onclick="naarScherm(7)">Hele bibliotheek</button></div><ol class="kaartje-lijst" id="kaartje-lijst"></ol></div>
     </div>
   </div>
 </div>
@@ -2177,11 +2186,17 @@ async function vulStartpagina(){
   }catch(e){}
   try{
     var rows=await sbFetch('rpc/zoek_bronnen','POST',{p_klascode:'PUBLIEK',p_sort:'datum',p_offset:0});
-    var r=rows&&rows[0];if(!r)return;
-    document.getElementById('kaartje-type').textContent='Laatst gedeeld · '+(lbls[r.brontype]||'Bron');
-    var pos=r.stemmen_positief||0;document.getElementById('kaartje-stem').textContent=pos?'👍 '+pos:'';
-    document.getElementById('kaartje-tekst').innerHTML=veiligeHtml(r.bronnenlijst_html||esc(r.bronnenlijst));
-    var k=document.getElementById('start-kaartje');k.hidden=false;k.title='Bekijk de publieke bibliotheek';k.onclick=function(){naarScherm(7);};
+    var drie=(rows||[]).slice(0,3);if(!drie.length)return;
+    var lijst=document.getElementById('kaartje-lijst');lijst.innerHTML='';
+    drie.forEach(function(r){
+      var li=document.createElement('li');li.tabIndex=0;li.title='Bekijk in de publieke bibliotheek';
+      var pos=r.stemmen_positief||0;
+      li.innerHTML=veiligeHtml(r.bronnenlijst_html||esc(r.bronnenlijst))+'<span class="kaartje-meta">'+esc(lbls[r.brontype]||'Bron')+(pos?' · 👍 '+pos:'')+'</span>';
+      li.onclick=function(){naarScherm(7);};
+      li.onkeydown=function(e){if(e.key==='Enter')naarScherm(7);};
+      lijst.appendChild(li);
+    });
+    document.getElementById('start-kaartje').hidden=false;
   }catch(e){}
 }
 vulStartpagina();
