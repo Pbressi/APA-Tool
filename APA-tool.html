@@ -238,6 +238,12 @@ body.op-start{padding:0}
 .kaartje-lijst li:first-child{border-top:none;padding-top:.2rem}
 .kaartje-lijst li:last-child{padding-bottom:0}
 .kaartje-lijst li:hover{color:var(--groen)}
+/* drie losse kaartjes */
+.start-kaartje{background:none;box-shadow:none;padding:0;border-radius:0}
+.kaartje-kop{display:inline-flex;gap:.9rem;background:rgba(255,255,255,.92);border-radius:99px;padding:.3rem .85rem;margin-bottom:.5rem;box-shadow:0 6px 16px rgba(0,0,0,.12);backdrop-filter:blur(6px)}
+.kaartje-lijst{display:flex;flex-direction:column;gap:.55rem}
+.kaartje-lijst li,.kaartje-lijst li:first-child,.kaartje-lijst li:last-child{background:#fff;border:none;border-radius:14px;padding:.75rem 1rem .7rem 2.2rem;text-indent:-1.2rem;box-shadow:0 14px 32px rgba(0,0,0,.16);transition:transform .2s ease}
+.kaartje-lijst li:hover,.kaartje-lijst li:focus-visible{transform:translateX(6px);color:var(--antr)}
 .kaartje-meta{display:block;text-indent:0;font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--text3);margin-top:.15rem}
 @media(max-width:820px){
   .start{grid-template-columns:1fr}
