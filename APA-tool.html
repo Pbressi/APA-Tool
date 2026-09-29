@@ -140,6 +140,7 @@ h1,h2,.s2-title{font-optical-sizing:auto}
 .doi-snel button{padding:.5rem 1rem;background:var(--navy);color:#fff;border:none;border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap}
 .doi-snel button:disabled{opacity:.6;cursor:wait}
 .doi-melding{font-size:.76rem;line-height:1.5;margin-top:.5rem;color:var(--text2)}
+.isbn-kaart.uitgelicht{border-color:var(--groen);box-shadow:0 0 0 3px rgba(22,101,52,.12)}
 .optioneel-dicht .optioneel-veld{display:none}
 .meer-knop{grid-column:1/-1;justify-self:start;background:none;border:none;border-bottom:1px dashed var(--border2);padding:.2rem 0;font-family:'DM Sans',sans-serif;font-size:.76rem;color:var(--text2);cursor:pointer}
 .meer-knop:hover{color:var(--navy);border-bottom-color:var(--gold)}
@@ -303,6 +304,7 @@ html{font-size:clamp(16px,calc(10.5px + .42vw),21px)}
       </form>
       <div class="start-acties">
         <button type="button" class="actie hoofd" onclick="naarScherm(2)"><span><b>Bron toevoegen</b><small>21 brontypen, van boek tot ChatGPT</small></span><em aria-hidden="true">+</em></button>
+        <button type="button" class="actie" onclick="startIsbn()"><b>Boek via ISBN</b><small>Vul een boek automatisch in</small></button>
         <button type="button" class="actie" onclick="naarScherm(7)"><b>Publieke bibliotheek</b><small id="s1-pub-cnt">Bronnen gedeeld door iedereen</small></button>
         <button type="button" class="actie" onclick="naarScherm(6)"><b>Mijn klas</b><small>Bronnen met klascode</small></button>
         <button type="button" class="actie" onclick="naarScherm(5)"><b>Mijn bronnen</b><small><span id="s1-saved-cnt" style="display:none"></span><span id="s1-saved-leeg">Opgeslagen op dit apparaat</span></small></button>
@@ -1749,7 +1751,7 @@ function redVeld(){return '<div class="form-card"><div class="fsec">Redacteur(s)
 function onlineTog(lbl){return '<div class="ff"><label class="online-toggle" for="online-cb"><input type="checkbox" id="online-cb" onchange="toggleOnline(this)"><span>'+(lbl||'Bron online gevonden / online beschikbaar')+'</span></label><div class="online-fields" id="online-fields"><div class="doi-info">&#128161; <strong>DOI of URL?</strong> Een DOI is een unieke permanente code, bijv. <code>https://doi.org/10.1007/978-90-368</code>. Gebruik de DOI als die er is &mdash; dan heb je geen URL of raadpleegdatum nodig. Je vindt de DOI bovenaan een artikel of op de pagina van de uitgever.</div><div class="field"><label>DOI <span class="tag-opt">heeft voorkeur boven URL</span></label><input type="text" id="f-doi" placeholder="https://doi.org/..."></div><div class="field"><label>URL <span class="tag-opt">als geen DOI</span></label><span class="hint">Begint altijd met https:// of http://</span><input type="text" id="f-url" placeholder="https://..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem"><div class="field"><label>Geraadpleegd op &mdash; dag</label><input type="text" id="f-raaddag" placeholder="bijv. 12"></div><div class="field"><label>Geraadpleegd &mdash; maand en jaar</label><input type="text" id="f-raaddatum" placeholder="bijv. mei 2024"></div></div></div></div>'}
 
 var forms={
-boek:function(){return autVeld('Auteur(s)','Bij een organisatie als auteur: vul de organisatienaam in als achternaam','auth')+'<div class="form-card"><div class="fsec">Publicatiegegevens</div><div class="fg"><div class="field"><label>Jaar van uitgave</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Druk / editie <span class="tag-opt">optioneel</span></label><span class="hint">Schrijf het volledig uit, bijv.: <strong>3e herziene druk</strong> of <strong>2nd edition</strong> — alleen een cijfer is niet voldoende</span><input type="text" id="f-druk" placeholder="3e herziene druk" oninput="checkDruk(this)"><div id="druk-err" style="display:none;font-size:.7rem;color:#991b1b;margin-top:.25rem">Schrijf de druk volledig uit, bijv. <strong>2e herziene druk</strong>, <strong>3e druk</strong> of <strong>2nd edition</strong> — een getal alleen is niet voldoende.</div></div><div class="field ff"><label>Titel</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" oninput="autoHoofdletter(this)" placeholder="Titel van het boek"></div><div class="field ff"><label>Ondertitel <span class="tag-opt">optioneel</span></label><input type="text" id="f-ondertitel" oninput="autoHoofdletter(this)" placeholder="Eventuele ondertitel"></div><div class="field ff"><label>Uitgever</label><input type="text" id="f-uitgever" oninput="autoHoofdletter(this)" placeholder="Naam uitgever"></div>'+onlineTog('Boek online gevonden')+'</div></div>'},
+boek:function(){return autVeld('Auteur(s)','Bij een organisatie als auteur: vul de organisatienaam in als achternaam','auth')+'<div class="form-card"><div class="fsec">Publicatiegegevens</div><div class="fg"><div class="field"><label>Jaar van uitgave</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Druk / editie <span class="tag-opt">optioneel</span></label><span class="hint">Schrijf het volledig uit, bijv.: <strong>3e herziene druk</strong> of <strong>2nd edition</strong> — alleen een cijfer is niet voldoende</span><input type="text" id="f-druk" placeholder="3e herziene druk" oninput="checkDruk(this)"><div id="druk-err" style="display:none;font-size:.7rem;color:#991b1b;margin-top:.25rem">Schrijf de druk volledig uit, bijv. <strong>2e herziene druk</strong>, <strong>3e druk</strong> of <strong>2nd edition</strong> — een getal alleen is niet voldoende.</div></div><div class="field ff"><label>Titel</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-titel" oninput="autoHoofdletter(this)" placeholder="Titel van het boek"></div><div class="field ff"><label>Ondertitel <span class="tag-opt">optioneel</span></label><input type="text" id="f-ondertitel" oninput="autoHoofdletter(this)" placeholder="Eventuele ondertitel"></div><div class="field ff"><label>Uitgever</label><span class="hint">Staat in het colofon. Is een organisatie zowel auteur als uitgever? Vul dan dezelfde naam in; de uitgever wordt dan volgens APA weggelaten.</span><input type="text" id="f-uitgever" oninput="autoHoofdletter(this)" placeholder="Naam uitgever"></div>'+onlineTog('Boek online gevonden')+'</div></div>'},
 hoofdstuk:function(){return autVeld('Auteur(s) van het hoofdstuk','','auth')+'<div class="form-card"><div class="fsec">Hoofdstuk</div><div class="fg"><div class="field"><label>Jaar van uitgave</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Druk / editie <span class="tag-opt">optioneel</span></label><input type="text" id="f-druk" placeholder="2e druk" oninput="checkDruk(this)"><div id="druk-err" style="display:none;font-size:.7rem;color:#991b1b;margin-top:.25rem">Schrijf de druk volledig uit, bijv. <strong>2e herziene druk</strong>, <strong>3e druk</strong> of <strong>2nd edition</strong> — een getal alleen is niet voldoende.</div></div><div class="field ff"><label>Titel van het hoofdstuk</label><span class="hint">Staat niet cursief</span><input type="text" id="f-titel" oninput="autoHoofdletter(this)" placeholder="Titel van het hoofdstuk"></div><div class="field ff"><label>Titel van het boek</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-boek" placeholder="Titel van het boek"></div><div class="field"><label>Pagina\'s van</label><input type="text" id="f-pvan" placeholder="45"></div><div class="field"><label>Pagina\'s tot</label><input type="text" id="f-ptot" placeholder="68"></div><div class="field ff"><label>Uitgever</label><input type="text" id="f-uitgever" oninput="autoHoofdletter(this)" placeholder="Naam uitgever"></div>'+onlineTog('Hoofdstuk online gevonden')+'</div></div>'+redVeld()},
 tijdschrift:function(){return autVeld('Auteur(s)','','auth')+'<div class="form-card"><div class="fsec">Tijdschriftgegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Maand <span class="tag-opt">vaktijdschrift</span></label><input type="text" id="f-maand" placeholder="december"></div><div class="field ff"><label>Titel van het artikel</label><span class="hint">Staat niet cursief</span><input type="text" id="f-titel" oninput="autoHoofdletter(this)" placeholder="Titel van het artikel"></div><div class="field ff"><label>Naam tijdschrift</label><span class="hint">Wordt cursief. Belangrijke woorden met hoofdletter.</span><input type="text" id="f-tijdschrift" placeholder="Tijdschrift voor Communicatiewetenschap"></div><div class="field"><label>Jaargang (volume)</label><input type="text" id="f-jaargang" placeholder="48"></div><div class="field"><label>Nummer (issue)</label><input type="text" id="f-nummer" placeholder="4"></div><div class="field"><label>Pagina\'s van</label><input type="text" id="f-pvan" placeholder="209"></div><div class="field"><label>Pagina\'s tot</label><input type="text" id="f-ptot" placeholder="230"></div>'+onlineTog('Artikel online gevonden')+'</div></div>'},
 krant:function(){return autVeld('Auteur(s)','Geen auteur? Laat leeg &mdash; de titel komt dan vooraan','auth')+'<div class="form-card"><div class="fsec">Krantengegevens</div><div class="fg"><div class="field"><label>Jaar</label><input type="text" id="f-jaar" placeholder="2021"></div><div class="field"><label>Dag en maand</label><input type="text" id="f-dag" placeholder="15 maart"></div><div class="field ff"><label>Titel van het artikel</label><input type="text" id="f-titel" oninput="autoHoofdletter(this)" placeholder="Titel van het krantenartikel"></div><div class="field ff"><label>Naam krant</label><span class="hint">Wordt cursief weergegeven</span><input type="text" id="f-krant" placeholder="De Volkskrant"></div><div class="field"><label>Pagina(s) <span class="tag-opt">papier</span></label><input type="text" id="f-pagina" placeholder="pp. 4-5"></div><div class="field"></div>'+onlineTog('Artikel online gevonden')+'</div></div>'},
@@ -1797,7 +1799,7 @@ dataset:{wat:'Een verzameling onderzoeksgegevens (ruwe data).',invullen:'De eige
 };
 function buildUitleg(t){var h=hulp[t];if(!h)return '';function r(lbl,txt){return txt?'<div style="margin-bottom:.6rem"><div style="font-size:.68rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--gold2);margin-bottom:.15rem">'+lbl+'</div><div style="font-size:.81rem;color:var(--text2);line-height:1.55">'+txt+'</div></div>':'';}return '<div class="form-card" style="background:#faf7f1;border-color:#ece4d6;border-left:3px solid var(--gold);margin-bottom:0">'+r('Wat het is',h.wat)+r('Wat je invult',h.invullen)+r('Waar je het vindt',h.vindt)+r('Let op',h.let)+'</div>';}
 function toggleUitleg(){var p=document.getElementById('uitleg-paneel'),b=document.getElementById('uitleg-btn');if(!p)return;var open=p.style.display==='none';p.style.display=open?'block':'none';if(b)b.innerHTML=open?'&#10005; Sluit uitleg':'&#9432; Uitleg';}
-var verplicht={boek:['f-titel'],hoofdstuk:['f-titel','f-boek'],tijdschrift:['f-titel','f-tijdschrift'],krant:['f-titel','f-krant'],website:['f-titel'],rapport:['f-titel'],proefschrift:['f-titel'],youtube:['f-titel'],naslagwerk:['f-lemma','f-naslagwerk'],social:['f-inhoud'],podcast:['f-titel','f-podcast'],film:['f-titel'],muziek:['f-titel'],congres:['f-titel','f-congres'],wetgeving:['f-naam'],dataset:['f-naam'],software:['f-naam'],afbeelding:['f-titel'],leeromgeving:['f-titel','f-platform'],aitool:['f-ontwikkelaar','f-naam'],perscomm:['f-naam']};
+var verplicht={boek:['f-titel','f-uitgever'],hoofdstuk:['f-titel','f-boek'],tijdschrift:['f-titel','f-tijdschrift'],krant:['f-titel','f-krant'],website:['f-titel'],rapport:['f-titel'],proefschrift:['f-titel'],youtube:['f-titel'],naslagwerk:['f-lemma','f-naslagwerk'],social:['f-inhoud'],podcast:['f-titel','f-podcast'],film:['f-titel'],muziek:['f-titel'],congres:['f-titel','f-congres'],wetgeving:['f-naam'],dataset:['f-naam'],software:['f-naam'],afbeelding:['f-titel'],leeromgeving:['f-titel','f-platform'],aitool:['f-ontwikkelaar','f-naam'],perscomm:['f-naam']};
 function veldLabel(el){var f=el.closest('.field');var lab=f?f.querySelector('label'):null;if(!lab)return el.id;var t=lab.childNodes[0]?lab.childNodes[0].textContent.trim():'';return t||lab.textContent.trim()||el.id}
 function renderForm(t){var fc=document.getElementById('form-content');fc.innerHTML=forms[t]?forms[t]():'';document.getElementById('form-err').style.display='none';if(document.getElementById('auth-rows'))addAut('auth');if(document.getElementById('red-rows'))addAut('red');var up=document.getElementById('uitleg-paneel');if(up){up.innerHTML=buildUitleg(t);up.style.display='none';}var ub=document.getElementById('uitleg-btn');if(ub){ub.innerHTML='&#9432; Uitleg';ub.style.display=hulp[t]?'inline-block':'none';}
 (verplicht[t]||[]).forEach(function(id){var el=document.getElementById(id);if(el){var f=el.closest('.field');var lab=f?f.querySelector('label'):null;if(lab&&!lab.querySelector('.req-ster')){var s=document.createElement('span');s.className='req-ster';s.textContent=' *';lab.appendChild(s)}}})}
@@ -1817,7 +1819,7 @@ function metRol(aa,rol){if(!aa.length)return '';var a=autBl(aa);if(rol)a+=' ('+r
 function staart(delen){return delen.filter(Boolean).map(function(d){return ' '+d}).join('')}
 var gens={
 aitool:function(){var dev=g('f-ontwikkelaar'),jv=g('f-jaar')||'z.d.',nm=g('f-naam'),vs=g('f-versie'),url=g('f-url');if(!dev||!nm)return null;var naamStr=em(nm)+(vs?' ('+vs+')':'');var bl=punt(dev)+' ('+jv+'). '+naamStr+' [Generatieve AI].';if(url)bl+=' '+url;return{bl:bl.trim(),lp:dev+' ('+jv+')',hk:'('+dev+', '+jv+')',note:'<strong>1. Geen raadpleegdatum bij URL</strong><br>Een AI-tool gebruik je vaak meerdere dagen en de uitkomst is altijd uniek. Daarom laat je de raadpleegdatum weg &mdash; alleen de URL volstaat.<br><br><strong>2. Geen versienummer zichtbaar?</strong><br>Niet alle tools (zoals Copilot) tonen een versienummer. Laat dit onderdeel dan weg: <em>OpenAI. (2026). ChatGPT [Generatieve AI]. https://chat.openai.com</em><br><br><strong>3. AI gebruikt voor spellingcontrole?</strong><br>Vermeld dit kort in je voorwoord of inleiding: <em>Voor het controleren van de spelling is gebruik gemaakt van ChatGPT (OpenAI, 2026).</em> Zet de bronvermelding ook in je bronnenlijst.<br><br><strong>4. AI gebruikt als onderzoekstool?</strong><br>Noteer naast de bronvermelding ook de gebruikte prompt en (een deel van) de chat &mdash; in de hoofdtekst of als bijlage. Zie § 2.2 in <em>De APA-richtlijnen uitgelegd &mdash; Generatieve AI</em>.'}},
-boek:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),druk=g('f-druk'),uit=uitg(g('f-uitgever')),tit=samTit(g('f-titel'),g('f-ondertitel'));if(!tit)return null;var v=vp(g('f-doi'),g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl=kop(aa,jv,punt(em(tit)+(druk?' ('+druk+')':'')))+staart([punt(uit),v]);return Object.assign({bl:bl,note:'Titels van boeken staan cursief. Druk of editie staat tussen ronde haakjes na de titel, niet cursief.'},tvw(aa,em(tit),jv))},
+boek:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),druk=g('f-druk'),uit=uitg(g('f-uitgever')),tit=samTit(g('f-titel'),g('f-ondertitel'));if(!tit)return null;if(aa.length===1&&!aa[0].voorletters&&!aa[0].tussenvoegsel&&aa[0].achternaam.toLowerCase()===esc(uit).toLowerCase())uit='';var v=vp(g('f-doi'),g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl=kop(aa,jv,punt(em(tit)+(druk?' ('+druk+')':'')))+staart([punt(uit),v]);return Object.assign({bl:bl,note:'Titels van boeken staan cursief. Druk of editie staat tussen ronde haakjes na de titel, niet cursief.'},tvw(aa,em(tit),jv))},
 hoofdstuk:function(){var aa=getAut('auth'),ra=getAut('red'),jv=jj(g('f-jaar')),druk=g('f-druk'),uit=uitg(g('f-uitgever')),th=g('f-titel'),tb=g('f-boek'),pv=g('f-pvan'),pt=g('f-ptot');if(!th||!tb)return null;var ps=pv&&pt?'pp. '+pv+'-'+pt:pv?'p. '+pv:'';var rs=ra.length?lijstEn(ra.map(redNaam))+' ('+(ra.length===1?'Red.':'Reds.')+'), ':'';var extra=[druk,ps].filter(Boolean).join(', ');var v=vp(g('f-doi'),g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl=kop(aa,jv,punt(th))+' In '+rs+em(tb)+(extra?' ('+extra+')':'')+'.'+staart([punt(uit),v]);return Object.assign({bl:bl,note:'De hoofdstuktitel staat niet cursief. De boektitel staat cursief; druk en pagina\'s staan er niet-cursief achter. De voorletters van de redacteur(s) staan vóór de achternaam.'},tvw(aa,'"'+th+'"',jv))},
 tijdschrift:function(){var aa=getAut('auth'),jv=jj(g('f-jaar')),ma=g('f-maand'),ti=g('f-titel'),ts=g('f-tijdschrift'),jg=g('f-jaargang'),nr=g('f-nummer'),pv=g('f-pvan'),pt=g('f-ptot');if(!ti||!ts)return null;var js=ma?jv+', '+ma:jv;var tss=em(ts);if(jg)tss+=', '+em(jg);if(nr)tss+='('+nr+')';var ps=pv&&pt?', '+pv+'-'+pt:pv?', '+pv:'';var v=vp(g('f-doi'),g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl=kop(aa,js,punt(ti))+' '+tss+ps+'.'+staart([v]);return Object.assign({bl:bl,note:'De naam van het tijdschrift én de jaargang staan cursief. De artikeltitel staat niet cursief. Met DOI: geen URL of raadpleegdatum nodig.'},tvw(aa,'"'+ti+'"',jv))},
 krant:function(){var aa=getAut('auth'),jv=g('f-jaar')||'z.d.',da=g('f-dag'),ti=g('f-titel'),kr=g('f-krant'),pg=g('f-pagina');if(!ti||!kr)return null;var js=da?jv+', '+da:jv;var v=vp('',g('f-url'),g('f-raaddag'),g('f-raaddatum'));var bl=kop(aa,js,punt(ti))+' '+em(kr)+(pg?', '+pg:'')+'.'+staart([v]);return Object.assign({bl:bl,note:'De naam van de krant staat cursief. Geen auteur? Dan staat de titel vooraan.'},tvw(aa,'"'+ti.split(' ').slice(0,5).join(' ')+'"',jv))},
@@ -1976,6 +1978,17 @@ function verrijkFormulier(t){
     document.getElementById('doi-snel-knop').onclick=haalDoiOp;
     document.getElementById('doi-snel').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();haalDoiOp();}};
   }
+  // ISBN-snelinvoer bovenaan (alleen boek)
+  if(t==='boek'){
+    var ik=document.createElement('div');ik.className='form-card doi-kaart isbn-kaart';ik.id='isbn-kaart';
+    ik.innerHTML='<div class="fsec">Heb je een ISBN? <span class="tag-opt">snelste manier bij een boek</span></div>'
+      +'<p style="font-size:.76rem;color:var(--text3);line-height:1.5">Het ISBN staat op de achterkant (bij de streepjescode) of in het colofon. De gegevens worden opgehaald bij Google Books en Open Library. Controleer ze daarna altijd.</p>'
+      +'<div class="doi-snel"><input type="text" id="isbn-snel" inputmode="numeric" placeholder="978-90-01-89987-5" aria-label="ISBN om gegevens op te halen"><button type="button" id="isbn-snel-knop">Ophalen</button></div>'
+      +'<div class="doi-melding" id="isbn-melding" role="status"></div>';
+    fc.insertBefore(ik,fc.firstChild);
+    document.getElementById('isbn-snel-knop').onclick=haalIsbnOp;
+    document.getElementById('isbn-snel').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();haalIsbnOp();}};
+  }
   // Optionele velden inklappen
   var ver=verplicht[t]||[];
   fc.querySelectorAll('.form-card').forEach(function(card){
@@ -2115,8 +2128,89 @@ async function haalDoiOp(){
   }finally{knop.disabled=false;knop.textContent='Ophalen';}
 }
 
+/* ── ISBN ophalen via Google Books, met Open Library als aanvulling/terugval ── */
+// Browsersleutel; in Google Cloud beperkt tot de Books API en apa-bronvermelding.netlify.app
+var GOOGLE_BOOKS_KEY='AIzaSyCpN709M6Thj5wL9RpE0xfkcF6CyGcs60o';
+function isbnSchoon(s){return (s||'').toUpperCase().replace(/^\s*ISBN(-1[03])?:?/,'').replace(/[^0-9X]/g,'');}
+function isbnGeldig(i){
+  var s=0,k;
+  if(/^\d{9}[\dX]$/.test(i)){for(k=0;k<10;k++)s+=(i[k]==='X'?10:+i[k])*(10-k);return s%11===0;}
+  if(/^97[89]\d{10}$/.test(i)){for(k=0;k<13;k++)s+=+i[k]*(k%2?3:1);return s%10===0;}
+  return false;
+}
+// "Piet van der Berg" → {family:'van der Berg',given:'Piet'}; "Berg, Piet" → idem zonder tussenvoegsel
+function naamNaarPersoon(vol){
+  vol=(vol||'').replace(/\s+/g,' ').trim();if(!vol)return null;
+  if(vol.indexOf(',')>0){var p=vol.split(',');return{family:p[0].trim(),given:p.slice(1).join(' ').trim()};}
+  var w=vol.split(' ');if(w.length===1)return{family:vol,given:''};
+  for(var i=1;i<w.length-1;i++){var rest=w.slice(i).join(' ');if(w[i]===w[i].toLowerCase()&&splitsTussenvoegsel(rest)||/-[a-z']+$/.test(w[i]))return{family:rest,given:w.slice(0,i).join(' ')};}
+  return{family:w[w.length-1],given:w.slice(0,-1).join(' ')};
+}
+// "Titel, third edition" / "Titel (3e druk)" → titel + druk apart
+var DRUK_RE=/\s*[,:(]\s*((\d+\s?(st|nd|rd|th|e|de|ste)|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|tweede|derde|vierde|vijfde|zesde|zevende|achtste|negende|tiende)\s+(herziene\s+|revised\s+|geheel\s+herziene\s+)?(edition|ed\.|druk|editie))\s*\)?\s*$/i;
+function splitsDruk(titel){
+  var m=(titel||'').match(DRUK_RE);if(!m)return{titel:titel||'',druk:''};
+  var d=m[1].replace(/^(\d+)\s?(st|nd|rd|th|e|de|ste)\b/i,function(x,n,suf){return n+(/edition|ed\./i.test(m[1])?suf.toLowerCase():'e');});
+  return{titel:titel.slice(0,m.index).trim(),druk:d.charAt(0).toLowerCase()+d.slice(1)};
+}
+async function isbnGoogle(i){
+  var r=await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:'+i+(GOOGLE_BOOKS_KEY?'&key='+GOOGLE_BOOKS_KEY:''));
+  if(!r.ok)throw new Error('google '+r.status);
+  var j=await r.json();if(!j.items||!j.items.length)return null;
+  var v=j.items[0].volumeInfo||{};
+  return{titel:v.title||'',sub:v.subtitle||'',auteurs:v.authors||[],uitgever:v.publisher||'',jaar:(String(v.publishedDate||'').match(/\d{4}/)||[''])[0]};
+}
+async function isbnOpenLibrary(i){
+  function json(u){return fetch('https://openlibrary.org'+u).then(function(r){if(r.status===404)return null;if(!r.ok)throw new Error('openlibrary '+r.status);return r.json();});}
+  var b=await json('/isbn/'+i+'.json');if(!b)return null;
+  var sleutels=(b.authors||[]).map(function(a){return a.key;});
+  if(!sleutels.length&&b.works&&b.works[0]){var w=await json(b.works[0].key+'.json').catch(function(){return null;});sleutels=((w&&w.authors)||[]).map(function(a){return a.author&&a.author.key;}).filter(Boolean);}
+  var namen=await Promise.all(sleutels.slice(0,20).map(function(k){return json(k+'.json').then(function(a){return a?(a.personal_name||a.name||''):'';}).catch(function(){return '';});}));
+  return{titel:b.title||'',sub:b.subtitle||'',auteurs:namen.filter(Boolean),uitgever:(b.publishers||[])[0]||'',jaar:(String(b.publish_date||'').match(/\d{4}/)||[''])[0]};
+}
+async function haalIsbnOp(){
+  var inp=document.getElementById('isbn-snel'),knop=document.getElementById('isbn-snel-knop'),mel=document.getElementById('isbn-melding');
+  var i=isbnSchoon(inp.value);
+  if(!isbnGeldig(i)){mel.style.color='#92400e';mel.textContent='Dit lijkt geen geldig ISBN. Een ISBN heeft 10 of 13 cijfers (meestal beginnend met 978 of 979), bijv. 978-90-01-89987-5. Controleer op typefouten.';return;}
+  knop.disabled=true;knop.textContent='Bezig…';mel.style.color='var(--text2)';mel.textContent='Boek zoeken bij Google Books…';
+  var g=null,o=null,fouten=0;
+  try{g=await isbnGoogle(i);}catch(e){fouten++;}
+  try{
+    // Open Library als Google niets vond, of om ontbrekende gegevens aan te vullen
+    if(!g||!g.auteurs.length||!g.uitgever||!g.jaar){mel.textContent='Boek zoeken bij Open Library…';try{o=await isbnOpenLibrary(i);}catch(e){fouten++;}}
+    var b=g||o;
+    if(!b){
+      mel.style.color='#991b1b';
+      mel.textContent=fouten>=2?'Ophalen lukte niet (geen verbinding?). Vul de gegevens zelf in.':'Dit ISBN is niet gevonden bij Google Books en Open Library. Vul de gegevens zelf in.';
+      return;
+    }
+    if(o&&b!==o){['titel','sub','uitgever','jaar'].forEach(function(k){if(!b[k])b[k]=o[k];});if(!b.auteurs.length)b.auteurs=o.auteurs;}
+    var n=0,sd=splitsDruk(b.titel),titel=sd.titel,sub=b.sub;
+    if(titel&&zetVeld('f-titel',titel))n++;
+    if(sub&&zetVeld('f-ondertitel',sub))n++;
+    if(sd.druk&&zetVeld('f-druk',sd.druk))n++;
+    if(zetVeld('f-jaar',b.jaar))n++;
+    if(zetVeld('f-uitgever',uitg(b.uitgever)))n++;
+    n+=vulPersonen('auth',b.auteurs.map(naamNaarPersoon).filter(Boolean));
+    toonGevuldeOptioneel();updateVoorbeeld();
+    var hoofdletters=((titel+' '+sub).match(/\b[A-Z][a-z]{3,}/g)||[]).length>=3;
+    var bron=g?(o?'Google Books en Open Library':'Google Books'):'Open Library';
+    var mist=[[b.auteurs.length,'auteur(s)'],[b.jaar,'jaar'],[b.uitgever,'uitgever']].filter(function(x){return !x[0];}).map(function(x){return x[1];});
+    mel.style.color='#166534';
+    mel.innerHTML='✓ '+n+' gegevens ingevuld via '+bron+'. <strong>Controleer ze</strong> met het boek: vooral de druk en het jaar (dat van jóúw druk).'
+      +(hoofdletters?' <span style="color:#92400e">Let op de hoofdletters in de titel: APA wil alleen een hoofdletter aan het begin, na een dubbele punt en bij namen.</span>':'')
+      +(mist.length?' <span style="color:#92400e">Niet gevonden: '+mist.join(', ')+'. Vul dit zelf in (staat in het colofon).</span>':'');
+  }finally{knop.disabled=false;knop.textContent='Ophalen';}
+}
+function startIsbn(){
+  kies('boek');
+  var k=document.getElementById('isbn-kaart'),inp=document.getElementById('isbn-snel');
+  if(k){k.classList.add('uitgelicht');inp.addEventListener('input',function(){k.classList.remove('uitgelicht');},{once:true});}
+  if(inp&&window.matchMedia('(pointer:fine)').matches)setTimeout(function(){inp.focus();},300);
+}
+
 /* ── Brontype zoeken ── */
-var TYPE_ZOEK={boek:'e-book ebook studieboek leerboek',hoofdstuk:'bundel redacteur',tijdschrift:'artikel journal wetenschappelijk vakblad paper',krant:'nieuws volkskrant nrc trouw telegraaf',naslagwerk:'woordenboek wikipedia encyclopedie van dale lemma',website:'internet site blog nieuwssite online pagina nu.nl nos',youtube:'video vimeo npo start filmpje',social:'instagram tiktok twitter x facebook linkedin post tweet',podcast:'spotify aflevering audio',film:'serie netflix documentaire tv televisie',muziek:'lied song album spotify nummer',rapport:'brochure folder jaarverslag richtlijn persbericht rapportage',proefschrift:'scriptie thesis afstuderen afstudeeropdracht stageverslag dissertatie',congres:'symposium presentatie keynote poster conferentie',dataset:'data cbs gegevens',aitool:'chatgpt claude copilot gemini ai kunstmatige intelligentie generatieve',wetgeving:'wet ecli uitspraak kamerstuk rechtspraak jurisprudentie',software:'app programma applicatie',afbeelding:'figuur tabel foto grafiek kaart plaatje kunstwerk',leeromgeving:'brightspace canvas teams blackboard moodle reader powerpoint studiehandleiding',perscomm:'interview gesprek email e-mail mail les college docent'};
+var TYPE_ZOEK={boek:'e-book ebook studieboek leerboek isbn',hoofdstuk:'bundel redacteur',tijdschrift:'artikel journal wetenschappelijk vakblad paper',krant:'nieuws volkskrant nrc trouw telegraaf',naslagwerk:'woordenboek wikipedia encyclopedie van dale lemma',website:'internet site blog nieuwssite online pagina nu.nl nos',youtube:'video vimeo npo start filmpje',social:'instagram tiktok twitter x facebook linkedin post tweet',podcast:'spotify aflevering audio',film:'serie netflix documentaire tv televisie',muziek:'lied song album spotify nummer',rapport:'brochure folder jaarverslag richtlijn persbericht rapportage',proefschrift:'scriptie thesis afstuderen afstudeeropdracht stageverslag dissertatie',congres:'symposium presentatie keynote poster conferentie',dataset:'data cbs gegevens',aitool:'chatgpt claude copilot gemini ai kunstmatige intelligentie generatieve',wetgeving:'wet ecli uitspraak kamerstuk rechtspraak jurisprudentie',software:'app programma applicatie',afbeelding:'figuur tabel foto grafiek kaart plaatje kunstwerk',leeromgeving:'brightspace canvas teams blackboard moodle reader powerpoint studiehandleiding',perscomm:'interview gesprek email e-mail mail les college docent'};
 function kaartType(c){var m=(c.getAttribute('onclick')||'').match(/kies\('(\w+)'\)/);return m?m[1]:'';}
 function filterTypes(){
   var q=(document.getElementById('type-zoek').value||'').toLowerCase().trim(),woorden=q.split(/\s+/).filter(Boolean),totaal=0;
