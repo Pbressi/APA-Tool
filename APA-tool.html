@@ -461,7 +461,7 @@ html{font-size:clamp(16px,calc(10.5px + .42vw),21px)}
   </div>
 
   <div class="action-row" style="margin-top:.75rem">
-    <button class="act-btn" id="opslaan-btn" onclick="slaOpBlijf(this)">Opslaan in lijst</button>
+    <button class="act-btn" id="opslaan-btn" onclick="slaOpBlijf(this)">Opslaan in mijn persoonlijke lijst</button>
     <button class="act-btn" onclick="naarScherm(2)">Nieuwe bron</button>
   </div>
   <div id="opslaan-hint" style="display:none;background:var(--gold-soft);border:1px solid #ece4d6;border-left:3px solid var(--gold);border-radius:var(--rsm);padding:.7rem 2rem .7rem .9rem;margin-top:.6rem;font-size:.78rem;color:var(--text2);line-height:1.55;position:relative">
@@ -688,7 +688,7 @@ html{font-size:clamp(16px,calc(10.5px + .42vw),21px)}
       <div class="help-section">
         <h3>Opslaan</h3>
         <ul>
-          <li><strong>Opslaan in lijst</strong> bewaart de bron lokaal in je browser op dit apparaat.</li>
+          <li><strong>Opslaan in mijn persoonlijke lijst</strong> bewaart de bron lokaal in je browser op dit apparaat.</li>
           <li>Je lijst blijft bewaard als je de tool sluit en opnieuw opent — zolang je dezelfde browser gebruikt.</li>
           <li>Let op: je lijst verdwijnt als je de browsergeschiedenis of cache wist.</li>
           <li><strong>Advies: deel je bronnen ook</strong> — alleen lokaal opslaan wordt afgeraden. Deel ze met je klas of publiek zodat je ze altijd terug kunt vinden, ook op een ander apparaat.</li>
@@ -1845,7 +1845,7 @@ var ontbreekt=[];
 (verplicht[ht]||[]).forEach(function(id){var el=document.getElementById(id);if(el&&!el.value.trim()){el.classList.add('veld-fout');el.addEventListener('input',function h(){el.classList.remove('veld-fout');el.removeEventListener('input',h)});ontbreekt.push(veldLabel(el))}});
 if(ontbreekt.length){err.textContent='Vul ook in: '+ontbreekt.join(', ')+'.';err.style.display='block';var eerste=document.querySelector('#form-content .veld-fout');if(eerste)eerste.scrollIntoView({behavior:'smooth',block:'center'});return}
 var r=gens[ht]();if(!r){err.textContent='Vul minimaal de vereiste velden in.';err.style.display='block';return}
-var ob=document.getElementById('opslaan-btn');if(ob){ob.textContent='Opslaan in lijst';ob.onclick=function(){slaOpBlijf(ob)};}
+var ob=document.getElementById('opslaan-btn');if(ob){ob.textContent='Opslaan in mijn persoonlijke lijst';ob.onclick=function(){slaOpBlijf(ob)};}
 lastR=r;document.getElementById('c-bl').innerHTML=r.bl;document.getElementById('c-lp').innerHTML=r.lp;document.getElementById('c-hk').innerHTML=r.hk;var note=document.getElementById('c-bl-note');if(r.note){note.innerHTML=r.note;note.style.display='block'}else{note.style.display='none'}if(r.geenBl){document.getElementById('c-bl').style.cssText='color:#9a9590;font-style:italic'}else{document.getElementById('c-bl').style.cssText=''}naarScherm(4);swTab(0);
   // Hide deel section for perscomm
   var deelCard=document.getElementById('deel-card');
