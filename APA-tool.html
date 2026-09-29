@@ -184,6 +184,7 @@ body.op-start{padding:0}
 .copy-btn:hover,.copy-all-btn:hover{background:var(--groen);border-color:var(--groen)}
 .act-btn.primary{background:var(--groen);border-color:var(--groen)}
 .act-btn.primary:hover{background:var(--groen2)}
+.deel-knop{width:100%;padding:.9rem;font-size:.95rem;font-weight:600;margin-top:.25rem}
 .res-tab.active{border-bottom-color:var(--groen)}
 .live-vb{border-left-color:var(--hout)}
 .req-ster{color:var(--hout2)}
@@ -460,7 +461,7 @@ html{font-size:clamp(16px,calc(10.5px + .42vw),21px)}
   </div>
 
   <div class="action-row" style="margin-top:.75rem">
-    <button class="act-btn primary" id="opslaan-btn" onclick="slaOpBlijf(this)">Opslaan in lijst</button>
+    <button class="act-btn" id="opslaan-btn" onclick="slaOpBlijf(this)">Opslaan in lijst</button>
     <button class="act-btn" onclick="naarScherm(2)">Nieuwe bron</button>
   </div>
   <div id="opslaan-hint" style="display:none;background:var(--gold-soft);border:1px solid #ece4d6;border-left:3px solid var(--gold);border-radius:var(--rsm);padding:.7rem 2rem .7rem .9rem;margin-top:.6rem;font-size:.78rem;color:var(--text2);line-height:1.55;position:relative">
@@ -476,10 +477,8 @@ html{font-size:clamp(16px,calc(10.5px + .42vw),21px)}
       <div style="font-size:.78rem;color:var(--text2);margin-bottom:.75rem;line-height:1.55">Je bron komt in de publieke bibliotheek, zodat iedereen ervan profiteert. Vul een klascode in om hem &oacute;&oacute;k in jullie eigen klasdatabase te zetten.</div>
       <div style="display:flex;flex-direction:column;gap:.5rem">
         <input type="text" id="direct-naam" placeholder="Jouw naam (optioneel)" style="padding:.5rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--text);width:100%">
-        <div style="display:grid;grid-template-columns:1fr auto;gap:.5rem">
-          <input type="text" id="direct-code" placeholder="Klascode (optioneel)" style="padding:.5rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--text);width:100%">
-          <button onclick="directDelen()" style="padding:.5rem 1.1rem;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;white-space:nowrap">Deel</button>
-        </div>
+        <input type="text" id="direct-code" placeholder="Klascode (optioneel)" style="padding:.5rem .7rem;border:1px solid var(--border2);border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:.84rem;color:var(--text);width:100%">
+        <button class="act-btn primary deel-knop" onclick="directDelen()">Delen in de bibliotheek</button>
       </div>
       <div id="direct-melding" style="display:none;margin-top:.5rem;font-size:.75rem;padding:.4rem .6rem;border-radius:var(--rsm)"></div>
     </div>
